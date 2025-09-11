@@ -1,6 +1,20 @@
 [x] Make the UI
     [x] Textbox
     [x] Sidebar Files
+        [x] Add a "Options" button
+        [x] Add a "New File" button
+        [ ] Right Click on a file
+            [ ] Add a "Delete" button
+            [ ] Add a "Rename" button
+            [ ] Add a "Pin" button
+                [ ] When pinned, it'll be replaced with "Unpin"
+                [ ] When unpinned, it'll be replaced with "Pin"
+            [ ] Add a "Lock" button
+                [ ] When locked, it'll be replaced with "Unlock"
+                [ ] When unlocked, it'll be replaced with "Lock"
+                    [ ] Make locking do this:
+                        [ ] Not be able to delete that specific file
+                        [ ] Not be able to rename that specific file
     ~~[x] Make a commit tab~~
         ~~[x] Give the commit names have Name~~
         ~~[x] Give the commit names have Timestamp~~

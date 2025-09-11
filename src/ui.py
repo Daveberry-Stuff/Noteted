@@ -1,6 +1,5 @@
 import customtkinter as ctk
 import tkinter as tk
-import git
 import os
 from tkinter import filedialog, messagebox
 from PIL import Image
