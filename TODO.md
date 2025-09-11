@@ -1,0 +1,31 @@
+[x] Make the UI
+    [x] Textbox
+    [x] Sidebar Files
+    ~~[x] Make a commit tab~~
+        ~~[x] Give the commit names have Name~~
+        ~~[x] Give the commit names have Timestamp~~
+    [ ] Dark, Light and Custom Theme
+        [x] Dark Theme
+        [ ] Light Theme
+        [ ] Custom Theme
+            [ ] Use JSON to make it easier to customize
+[x] Make the code ignore other file extensions and only matter `.md` and `.td`
+[x] Make discord's RPC
+~~[x] Fix Padding~~
+    ~~[ ] Fix the padding on the `commitFrame`~~
+[ ] Make Settings
+    [ ] An option to either `Disable` or `Enable` Discord RPC for privacy purposes
+    [ ] Dropdown for theme
+        [ ] Dark Theme
+        [ ] Light Theme
+        [ ] Custom Theme
+            [ ] List every single custom theme Inside of `~/AppData/Local/Noteted/themes`
+            [ ] Use JSON because for easier theme changing.
+[ ] Files Fixes/Adding
+    [ ] Auto saving
+    [ ] Make switching through files actually functional
+    [ ] Remove when `.md` or `.td` is in the name
+    [ ] Make a custom `.td` file
+    [ ] Add markdown support
+[ ] Give Icons to everything
+[ ] Make a file settings inside of `~/AppData/Local/Noteted`
