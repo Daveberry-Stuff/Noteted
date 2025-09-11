@@ -4,19 +4,40 @@ import os
 from tkinter import filedialog, messagebox
 from PIL import Image
 import src.discord as dcPresence
+import markdown2
+from tkhtmlview import HTMLLabel
 
 def initialize_ui():
     root = ctk.CTk()
     root.title("Noteted")
     root.geometry("1280x720")
     root.minsize(800, 600)
+    root.iconbitmap(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets', 'NTD.ico'))
     ctk.set_appearance_mode("dark")
     ctk.set_default_color_theme("dark-blue")
 
     sidebar(root)
-    textbox(root)
+    writingBox2 = textbox(root)
+    previewBox2 = previewbox(root)
     dcRPC(root)
 
+    # also before you ask, yes I did use ai to make this function
+    # now stop fucking bullying me about it
+    def updatePreview(event=None):
+        markdownText = writingBox2.get("1.0", tk.END)
+        HTMLtext = markdown2.markdown(markdownText, extras=["fenced-code-blocks", "strike"])
+
+        # there's like no other way to make it white so this is the most optimal solution
+        tags2style = ["<p>", "<h1>", "<h2>", "<h3>", "<h4>", "<h5>", "<h6>", "<li>", "<strong>", "<em>", "<a>", "<s>"]
+        for tag in tags2style:
+            HTMLtext = HTMLtext.replace(tag, tag[:-1] + ' style="color:white;">')
+        
+        HTMLtext = HTMLtext.replace('<pre>', '<pre style="background-color:#2b2b2b; padding:10px; border-radius:4px;">')
+        HTMLtext = HTMLtext.replace('<code>', '<code style="color:white;">')
+
+        previewBox2.set_html(HTMLtext)
+
+    writingBox2.bind("<KeyRelease>", updatePreview)
     root.mainloop()
 
 if __name__ == "__main__":
@@ -50,8 +71,17 @@ def sidebar(root):
 def textbox(root):
     writingbox = ctk.CTkTextbox(root, width=400, height=300, corner_radius=10,
                                 fg_color="#1e1e1e", font=("Arial", 14))
-    writingbox.pack(pady=10, padx=10, expand=True, fill="both")
+    writingbox.pack(pady=10, padx=0, expand=True, fill="both", side="left")
     return writingbox
+
+def previewbox(root):
+    preview_container = ctk.CTkFrame(root, corner_radius=10, fg_color="#1e1e1e")
+    preview_container.pack(pady=10, padx=10, expand=True, fill="both", side="right")
+
+    previewboxed = HTMLLabel(preview_container, background='#1e1e1e')
+    previewboxed.pack(expand=True, fill="both", padx=5, pady=5)
+
+    return previewboxed
 
 def listFiles(part):
     notes_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'notes')
@@ -60,6 +90,7 @@ def listFiles(part):
             if file_name.endswith((".md", ".td", ".txt")):
                 button = ctk.CTkButton(part, text=file_name)
                 button.pack(pady=5, padx=10, fill="x")
+                print(f"Loaded file: {file_name}")
     else:
         print("Notes directory not found, creating one...")
         os.makedirs(notes_dir)

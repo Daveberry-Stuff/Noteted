@@ -1,1 +1,5 @@
 venv
+src/__pycache__
+src/scrapped
+*.pyc
+.DS_Store

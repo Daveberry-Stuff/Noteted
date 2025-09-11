@@ -1,5 +1,8 @@
 [x] Make the UI
     [x] Textbox
+    [ ] Preview Box
+        [ ] Markdown
+        [ ] Todo
     [x] Sidebar Files
         [x] Add a "Options" button
         [x] Add a "New File" button
@@ -23,11 +26,12 @@
         [ ] Light Theme
         [ ] Custom Theme
             [ ] Use JSON to make it easier to customize
-[x] Make the code ignore other file extensions and only matter `.md` and `.td`
+[x] Make the code ignore other file extensions and only matter `.md`, `.td` and `.txt`
 [x] Make discord's RPC
 ~~[x] Fix Padding~~
     ~~[ ] Fix the padding on the `commitFrame`~~
 [ ] Make Settings
+    [ ] A path where a user can set their notes path to their wanted one.
     [ ] An option to either `Disable` or `Enable` Discord RPC for privacy purposes
     [ ] Dropdown for theme
         [ ] Dark Theme

@@ -1,6 +1,7 @@
 customtkinter
 pypresence
 Pillow
+
 # pygame
 # requests
 # gitpython
