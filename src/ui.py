@@ -13,13 +13,8 @@ def initialize_ui():
     root.minsize(800, 600)
     ctk.set_appearance_mode("dark")
     ctk.set_default_color_theme("dark-blue")
-    
-    left_container = ctk.CTkFrame(root, fg_color="transparent")
-    left_container.pack(side="left", fill="y", padx=10, pady=10)
 
-    sidebar_frame = sidebar(left_container)
-    listFiles(sidebar_frame)
-    gitCommits(left_container)
+    sidebar(root)
     textbox(root)
     dcRPC(root)
 
@@ -28,59 +23,47 @@ def initialize_ui():
 if __name__ == "__main__":
     initialize_ui()
 
-def sidebar(parent):
-    sidebar = ctk.CTkFrame(parent, width=200, height=400, corner_radius=10,
+def optionsFunc():
+    print("Options")
+
+def newFile():
+    print("New File")
+
+def sidebar(root):
+    sidebar = ctk.CTkFrame(root, width=200, corner_radius=10,
                            fg_color="#1e1e1e")
-    sidebar.pack(pady=0, padx=0, side="top", fill="x")
+    sidebar.pack(pady=10, padx=10, side="left", fill="both")
     sidebar.pack_propagate(False)
+
+    button_frame = ctk.CTkFrame(sidebar, fg_color="transparent")
+    button_frame.pack(pady=10, padx=10, fill="x")
+
+    optionsButton = ctk.CTkButton(button_frame, text="Options", command=optionsFunc, width=85)
+    optionsButton.pack(side="left", expand=True, padx=(0, 5))
+
+    newFileButton = ctk.CTkButton(button_frame, text="New File", command=newFile, width=85)
+    newFileButton.pack(side="left", expand=True, padx=(5, 0))
+
+    listFiles(sidebar)
+    
     return sidebar
-
-def gitCommits(parent):
-    errorMessage = ""
-    commits = []
-
-    try:
-        repo = git.Repo(os.path.dirname(os.path.dirname(__file__)))
-        commits = list(repo.iter_commits('main', max_count=5))
-    except Exception as e:
-        commits = []
-        errorMessage = "Error fetching commits"
-
-    commitFrame = ctk.CTkFrame(parent, width=200, corner_radius=10,
-                                fg_color="#1e1e1e")
-    commitFrame.pack(pady=10, padx=0, side="top", fill="both", expand=True)
-
-    label = ctk.CTkLabel(commitFrame, text="Recent Commits", font=("Arial", 16))
-    label.pack(pady=10)
-
-    if not commits:
-        commitMessage = ctk.CTkLabel(commitFrame, text=str(errorMessage), font=("Arial", 12), wraplength=180)
-        commitMessage.pack(pady=5)
-    else:
-        for commit in commits:
-            commitFrame = ctk.CTkFrame(commitFrame, fg_color="transparent")
-            commitFrame.pack(fill="x", pady=5, padx=10)
-
-            commitMessage = ctk.CTkLabel(commitFrame, text=str(commit.message.strip()), font=("Arial", 12), wraplength=180, justify="left")
-            commitMessage.pack(anchor="w")
-
-            dateString = commit.authored_datetime.strftime("%Y-%m-%d %H:%M")
-            commitDate = ctk.CTkLabel(commitFrame, text=str(dateString), font=("Arial", 10), text_color="gray")
-            commitDate.pack(anchor="w", pady=(0, 5))
-
 
 def textbox(root):
     writingbox = ctk.CTkTextbox(root, width=400, height=300, corner_radius=10,
                                 fg_color="#1e1e1e", font=("Arial", 14))
     writingbox.pack(pady=10, padx=10, expand=True, fill="both")
+    return writingbox
 
 def listFiles(part):
     notes_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'notes')
     if os.path.exists(notes_dir):
         for file_name in os.listdir(notes_dir):
-            if file_name.endswith((".md", ".td")):
+            if file_name.endswith((".md", ".td", ".txt")):
                 button = ctk.CTkButton(part, text=file_name)
                 button.pack(pady=5, padx=10, fill="x")
+    else:
+        print("Notes directory not found, creating one...")
+        os.makedirs(notes_dir)
 
 def dcRPC(root):
     client_id = "1415709453898092692"

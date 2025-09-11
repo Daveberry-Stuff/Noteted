@@ -11,7 +11,7 @@
             - <a href="https://www.python.org/downloads/">https://www.python.org/downloads/</a> <br>
         </li>
         <li>Clone the git <br>
-            - Run the command in the terminal: <code>git clone https://daveberrys/noteted-py.git</code> <br>
+            - Run the command in the terminal: <code>git clone https://daveberrys/noteted.git</code> <br>
         </li>
         <li>Run the command <code>pip install -r requirements.txt</code> <br>
             - This will install all the required libraries for this project! <br>
