@@ -29,7 +29,7 @@ def initialize_ui():
 
         # there's like no other way to make it white so this is the most optimal solution
         tags2style = ["<p>", "<h1>", "<h2>", "<h3>", "<h4>", "<h5>", "<h6>", "<li>", "<strong>", "<em>", "<a>", "<s>"]
-        for tag in tags2style:
+        for tag in tags2style: 
             HTMLtext = HTMLtext.replace(tag, tag[:-1] + ' style="color:white;">')
         
         HTMLtext = HTMLtext.replace('<pre>', '<pre style="background-color:#2b2b2b; padding:10px; border-radius:4px;">')
@@ -84,7 +84,7 @@ def previewbox(root):
     return previewboxed
 
 def listFiles(part):
-    notes_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'notes')
+    notes_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'test-notes')
     if os.path.exists(notes_dir):
         for file_name in os.listdir(notes_dir):
             if file_name.endswith((".md", ".td", ".txt")):

@@ -5,3 +5,4 @@ src/scrapped
 .DS_Store
 dist
 build
+test-notes
