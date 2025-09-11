@@ -4,6 +4,7 @@ set /p "GitCommitDescription=Git Commit Description: "
 echo    Continue?
 pause
 
+git pull
 git add .
 git commit -a -m "%GitCommitName%" -m "%GitCommitDescription%"
 git push

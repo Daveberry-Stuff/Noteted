@@ -1,6 +1,9 @@
 customtkinter
 pypresence
 Pillow
+markdown2
+tkhtmlview
+pyinstaller
 
 # pygame
 # requests

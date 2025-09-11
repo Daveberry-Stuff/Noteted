@@ -3,3 +3,5 @@ src/__pycache__
 src/scrapped
 *.pyc
 .DS_Store
+dist
+build
