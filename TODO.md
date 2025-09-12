@@ -31,14 +31,17 @@
 ~~[x] Fix Padding~~
     ~~[ ] Fix the padding on the `commitFrame`~~
 [ ] Make Settings
-    [ ] A path where a user can set their notes path to their wanted one.
-    [ ] An option to either `Disable` or `Enable` Discord RPC for privacy purposes
+    [x] A path where a user can set their notes path to their wanted one.
+    [x] An option to either `Disable` or `Enable` Discord RPC for privacy purposes
     [ ] Dropdown for theme
-        [ ] Dark Theme
-        [ ] Light Theme
+        [x] Dark Theme
+        [x] Light Theme
         [ ] Custom Theme
             [ ] List every single custom theme Inside of `~/AppData/Local/Noteted/themes`
             [ ] Use JSON because for easier theme changing.
+[x] Actually make the text appear in the specific file
+[ ] Saving Feature
+[x] Fix the "Not Responding" when closing
 [ ] Files Fixes/Adding
     [ ] Auto saving
     [ ] Make switching through files actually functional

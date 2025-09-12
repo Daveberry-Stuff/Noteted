@@ -6,3 +6,4 @@ src/scrapped
 dist
 build
 test-notes
+src/settings.json

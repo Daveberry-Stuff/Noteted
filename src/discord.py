@@ -25,7 +25,14 @@ class DiscordRPC:
                 large_text="Noteted",
                 start=int(time.time())
             )
-            time.sleep(15)
+
+            # the meow is stupid and fixes a bug
+            # it would take like a soild 10 seconds to actually close the app
+            # so this fixes it somehow :sob:
+            for meow in range(15):
+                if not self.running:
+                    break
+                time.sleep(1)
         self.rpc.close()
 
     def stop(self):

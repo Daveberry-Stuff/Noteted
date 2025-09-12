@@ -6,8 +6,10 @@ from PIL import Image
 import src.discord as dcPresence
 import markdown2
 from tkhtmlview import HTMLLabel
+import src.settings as settingsUI
+import src.getFromJSON as getJson
 
-def initialize_ui():
+def initializeUI():
     root = ctk.CTk()
     root.title("Noteted")
     root.geometry("1280x720")
@@ -16,18 +18,22 @@ def initialize_ui():
     ctk.set_appearance_mode("dark")
     ctk.set_default_color_theme("dark-blue")
 
-    sidebar(root)
+    # say hi to sidebarFrame because it's here to fix the FUCKING aligment :333
+    sidebarFrame = sidebar(root)
     writingBox2 = textbox(root)
     previewBox2 = previewbox(root)
-    dcRPC(root)
+    if getJson.getSetting("EnableDiscordRPC"):
+        print("Discord RPC is enabled in settings! Initializing...")
+        dcRPC(root)
+    else:
+        print("Discord RPC is disabled in settings")
 
-    # also before you ask, yes I did use ai to make this function
-    # now stop fucking bullying me about it
+    # shout out to my boy gemini 2.4 pro and flash for this function!!!
     def updatePreview(event=None):
         markdownText = writingBox2.get("1.0", tk.END)
         HTMLtext = markdown2.markdown(markdownText, extras=["fenced-code-blocks", "strike"])
 
-        # there's like no other way to make it white so this is the most optimal solution
+        # WACKy way to do it since there's no other way to do so--
         tags2style = ["<p>", "<h1>", "<h2>", "<h3>", "<h4>", "<h5>", "<h6>", "<li>", "<strong>", "<em>", "<a>", "<s>"]
         for tag in tags2style: 
             HTMLtext = HTMLtext.replace(tag, tag[:-1] + ' style="color:white;">')
@@ -37,14 +43,15 @@ def initialize_ui():
 
         previewBox2.set_html(HTMLtext)
 
+    listFiles(sidebarFrame, writingBox2, updatePreview)
     writingBox2.bind("<KeyRelease>", updatePreview)
     root.mainloop()
 
 if __name__ == "__main__":
-    initialize_ui()
+    initializeUI()
 
 def optionsFunc():
-    print("Options")
+    settingsUI.initializeSettingsUI()
 
 def newFile():
     print("New File")
@@ -55,16 +62,14 @@ def sidebar(root):
     sidebar.pack(pady=10, padx=10, side="left", fill="both")
     sidebar.pack_propagate(False)
 
-    button_frame = ctk.CTkFrame(sidebar, fg_color="transparent")
-    button_frame.pack(pady=10, padx=10, fill="x")
+    buttonFrame = ctk.CTkFrame(sidebar, fg_color="transparent")
+    buttonFrame.pack(pady=10, padx=10, fill="x")
 
-    optionsButton = ctk.CTkButton(button_frame, text="Options", command=optionsFunc, width=85)
+    optionsButton = ctk.CTkButton(buttonFrame, text="Options", command=optionsFunc, width=85)
     optionsButton.pack(side="left", expand=True, padx=(0, 5))
 
-    newFileButton = ctk.CTkButton(button_frame, text="New File", command=newFile, width=85)
+    newFileButton = ctk.CTkButton(buttonFrame, text="New File", command=newFile, width=85)
     newFileButton.pack(side="left", expand=True, padx=(5, 0))
-
-    listFiles(sidebar)
     
     return sidebar
 
@@ -75,33 +80,41 @@ def textbox(root):
     return writingbox
 
 def previewbox(root):
-    preview_container = ctk.CTkFrame(root, corner_radius=10, fg_color="#1e1e1e")
-    preview_container.pack(pady=10, padx=10, expand=True, fill="both", side="right")
+    previewContainer = ctk.CTkFrame(root, corner_radius=10, fg_color="#1e1e1e")
+    previewContainer.pack(pady=10, padx=10, expand=True, fill="both", side="right")
 
-    previewboxed = HTMLLabel(preview_container, background='#1e1e1e')
-    previewboxed.pack(expand=True, fill="both", padx=5, pady=5)
+    previewBox = HTMLLabel(previewContainer, background='#1e1e1e')
+    previewBox.pack(expand=True, fill="both", padx=5, pady=5)
 
-    return previewboxed
+    return previewBox
 
-def listFiles(part):
-    notes_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'test-notes')
-    if os.path.exists(notes_dir):
-        for file_name in os.listdir(notes_dir):
-            if file_name.endswith((".md", ".td", ".txt")):
-                button = ctk.CTkButton(part, text=file_name)
+# again, ai because I don't feel like figuring out how to do this myself :3
+def listFiles(part, writingBox, updatePreview):
+    notesDirectory = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'test-notes')
+    if os.path.exists(notesDirectory):
+        for fileName in os.listdir(notesDirectory):
+            if fileName.endswith((".md", ".td", ".txt")):
+                filePath = os.path.join(notesDirectory, fileName)
+                def load_file_content(path=filePath):
+                    with open(path, "r") as file:
+                        content = file.read()
+                    writingBox.delete("1.0", tk.END)
+                    writingBox.insert("1.0", content)
+                    updatePreview()
+                button = ctk.CTkButton(part, text=fileName, command=load_file_content)
                 button.pack(pady=5, padx=10, fill="x")
-                print(f"Loaded file: {file_name}")
+                print(f"Loaded file: {fileName}")
     else:
         print("Notes directory not found, creating one...")
-        os.makedirs(notes_dir)
+        os.makedirs(notesDirectory)
 
 def dcRPC(root):
-    client_id = "1415709453898092692"
-    rpc_manager = dcPresence.startRPC(client_id)
+    RPCclientID = "1415709453898092692"
+    RPCmanager = dcPresence.startRPC(RPCclientID)
 
     def closing():
-        if rpc_manager:
-            rpc_manager.stop()
+        if RPCmanager:
+            RPCmanager.stop()
         root.destroy()
 
     root.protocol("WM_DELETE_WINDOW", closing)
