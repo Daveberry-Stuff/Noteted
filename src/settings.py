@@ -13,9 +13,9 @@ def loadSettings():
         with open(SETTINGS_FILE, 'r') as f:
             return json.load(f)
 
-def saveSettings(settings_data):
+def saveSettings(settingsData):
     with open(SETTINGS_FILE, 'w') as f:
-        json.dump(settings_data, f, indent=4)
+        json.dump(settingsData, f, indent=4)
 
 settingsDefinitions = [
     {
@@ -51,7 +51,14 @@ def initializeSettingsUI():
     currentSettings = loadSettings()
     listAllSettings(root, currentSettings)
 
+    def onClosed():
+        print("Settings window closed!")
+        saveSettings(currentSettings)
+        root.destroy()
+
+    root.protocol("WM_DELETE_WINDOW", onClosed)
     root.mainloop()
+
 
 # once again, i did use ai because I'M TOO LAZY !!!
 def listAllSettings(root, currentSettings):
