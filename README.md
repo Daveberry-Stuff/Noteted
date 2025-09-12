@@ -1,4 +1,6 @@
-<img align="center" src="assets/NTD.png" width="256">
+<div align="center">
+    <img align="center" src="assets/NTD.png" width="128">
+</div>
 
 <h2 align="center">
     ⚠️ STILL IN EARLY DEVELOPMENT! WILL HAVE BUGS. ⚠️
