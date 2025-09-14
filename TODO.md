@@ -50,3 +50,4 @@
     [ ] Add markdown support
 [ ] Give Icons to everything
 [ ] Make a file settings inside of `~/AppData/Local/Noteted`
+[ ] First Time Use UI

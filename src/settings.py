@@ -3,18 +3,24 @@ import tkinter as tk
 import tkinter.filedialog as filedialog
 import tkinter.messagebox as messagebox
 import os
-import src.ui as ui
 import json
 
-SETTINGS_FILE = os.path.join(os.path.dirname(__file__), 'settings.json')
+appdataDirectory = os.path.join(os.getenv('APPDATA'), "Noteted")
+if not os.path.exists(appdataDirectory):
+    os.makedirs(appdataDirectory)
+
+settingsFile = os.path.join(appdataDirectory, 'settings.json')
 
 def loadSettings():
-    if os.path.exists(SETTINGS_FILE):
-        with open(SETTINGS_FILE, 'r') as f:
+    try:
+        with open(settingsFile, 'r') as f:
             return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
 
 def saveSettings(settingsData):
-    with open(SETTINGS_FILE, 'w') as f:
+    print(f"Attempting to save settings to: {settingsFile}")
+    with open(settingsFile, 'w') as f:
         json.dump(settingsData, f, indent=4)
 
 settingsDefinitions = [
@@ -34,7 +40,7 @@ settingsDefinitions = [
     {
         "name": "Notes Directory",
         "type": "path",
-        "default": os.path.join(os.path.dirname(os.path.dirname(__file__)), 'test-notes'),
+        "default": os.path.join(appdataDirectory, "Notes"),
         "key": "NotesDirectory"
     }
 ]
@@ -49,23 +55,22 @@ def initializeSettingsUI():
     ctk.set_default_color_theme("dark-blue")
 
     currentSettings = loadSettings()
-    listAllSettings(root, currentSettings)
+
+    settingContainer = ctk.CTkFrame(root, corner_radius=10, fg_color="#1e1e1e")
+    settingContainer.pack(pady=10, padx=10, expand=True, fill="both")
+
+    listAllSettings(settingContainer, currentSettings)
 
     def onClosed():
         print("Settings window closed!")
         saveSettings(currentSettings)
+
         root.destroy()
 
     root.protocol("WM_DELETE_WINDOW", onClosed)
     root.mainloop()
 
-
-# once again, i did use ai because I'M TOO LAZY !!!
-def listAllSettings(root, currentSettings):
-    print("Listing all settings...")
-    settingContainer = ctk.CTkFrame(root, corner_radius=10, fg_color="#1e1e1e")
-    settingContainer.pack(pady=10, padx=10, expand=True, fill="both", side="right")
-
+def listAllSettings(parent, currentSettings):
     for settingDef in settingsDefinitions:
         settingName = settingDef["name"]
         settingType = settingDef["type"]
@@ -74,7 +79,7 @@ def listAllSettings(root, currentSettings):
 
         currentValue = currentSettings.get(settingKey, defaultValue)
 
-        settingFrame = ctk.CTkFrame(settingContainer, fg_color="transparent")
+        settingFrame = ctk.CTkFrame(parent, fg_color="transparent")
         settingFrame.pack(pady=5, padx=10, fill="x")
 
         settingLabel = ctk.CTkLabel(settingFrame, text=settingName)
@@ -112,8 +117,3 @@ def listAllSettings(root, currentSettings):
     def updateSetting(key, value, settings_dict):
         settings_dict[key] = value
         print(f"Setting {key} updated to {value}")
-
-    saveButton = ctk.CTkButton(settingContainer, text="Save Settings", command=lambda: saveSettings(currentSettings))
-    saveButton.pack(pady=10)
-
-    return settingContainer
