@@ -6,7 +6,7 @@ import datetime
 import src.getFromJSON as getJson
 import src.ui as ui
 
-def dekete():
+def delete():
     print("Delete window opened!")
 
 def newFile(reload_callback=None):
