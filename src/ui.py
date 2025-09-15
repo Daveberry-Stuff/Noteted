@@ -19,7 +19,9 @@ def initializeUI():
     root.iconbitmap(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets', 'NTD.ico'))
     ctk.set_appearance_mode("dark")
     ctk.set_default_color_theme("dark-blue")
-    root.eval('tk::PlaceWindow . center')
+
+    # meow this is for the opened file background :3
+    openedFileButton = {"button": None}
 
     # say hi to sidebarFrame AND topbarFrame because it's here to fix the FUCKING aligment :333
     topbarFrame = topbar(root)
@@ -47,20 +49,31 @@ def initializeUI():
 
         previewBox2.set_html(HTMLtext)
 
-    listFiles(sidebarFrame, writingBox2, updatePreview)
+    listFiles(sidebarFrame, writingBox2, updatePreview, openedFileButton)
     writingBox2.bind("<KeyRelease>", updatePreview)
-    buttons(topbarFrame)
+
+    # Pass a callback to the buttons function to allow it to trigger a file list reload
+    def reload_callback():
+        reloadFileList(sidebarFrame, writingBox2, updatePreview, openedFileButton)
+
+    buttons(topbarFrame, reload_callback)
     root.mainloop()
 
 if __name__ == "__main__":
     initializeUI()
 
 # ===== button functions stuff =====
-def optionsFunc():
+def funcOptionsButton():
     settingsUI.initializeSettingsUI()
+    
+def funcNewFileButton(reloadList):
+    NTDwindow.newFile(reloadList)
+    
+def funcInfoButton():
+    NTDwindow.info()
 
-def newFile():
-    NTDwindow.newfile.window()
+def funcDeleteButton():
+    NTDwindow.delete()
     
 # ===== other ui stuff =====
 # thanks gemini code assist! you're great :3
@@ -81,7 +94,7 @@ def topbar(root):
 
     return topbar
 
-def buttons(frame):
+def buttons(frame, reloadList):
     # icon buttons with text fallback meow :3
     base_path = os.path.dirname(os.path.dirname(__file__))
     icon_size = (20, 20)
@@ -94,27 +107,36 @@ def buttons(frame):
     optionsIconPath = os.path.join(base_path, 'assets', 'icons', 'buttons', 'tool.png')
     if os.path.exists(optionsIconPath):
         optionsIcon = ctk.CTkImage(recolorImage(optionsIconPath, color="#FFFFFF"), size=icon_size)
-        optionsButton = ctk.CTkButton(buttonFrame, image=optionsIcon, text="", command=optionsFunc, width=button_size, height=button_size)
+        optionsButton = ctk.CTkButton(buttonFrame, image=optionsIcon, text="", command=funcOptionsButton, width=button_size, height=button_size)
     else:
-        optionsButton = ctk.CTkButton(buttonFrame, text="Options", command=optionsFunc, width=85)
+        optionsButton = ctk.CTkButton(buttonFrame, text="Options", command=funcOptionsButton, width=85)
     optionsButton.pack(side="left", expand=False, padx=20)
 
     # new file
     newFileIconPath = os.path.join(base_path, 'assets', 'icons', 'buttons', 'file-plus.png')
+
     if os.path.exists(newFileIconPath):
         newFileIcon = ctk.CTkImage(recolorImage(newFileIconPath, color="#FFFFFF"), size=icon_size)
-        newFileButton = ctk.CTkButton(buttonFrame, image=newFileIcon, text="", command=newFile, width=button_size, height=button_size)
+        newFileButton = ctk.CTkButton(buttonFrame, image=newFileIcon, text="", command=lambda: funcNewFileButton(reloadList), width=button_size, height=button_size)
     else:
-        newFileButton = ctk.CTkButton(buttonFrame, text="New File", command=newFile, width=85)
+        newFileButton = ctk.CTkButton(buttonFrame, text="New File", command=funcNewFileButton, width=85)
     newFileButton.pack(side="left", expand=False, padx=0)
+    
+    # new file
+    infoIconPath = os.path.join(base_path, 'assets', 'icons', 'buttons', 'info.png')
+    if os.path.exists(infoIconPath):
+        infoIcon = ctk.CTkImage(recolorImage(infoIconPath, color="#FFFFFF"), size=icon_size)
+        iconButton = ctk.CTkButton(buttonFrame, image=infoIcon, text="", command=funcInfoButton, width=button_size, height=button_size)
+    else:
+        iconButton = ctk.CTkButton(buttonFrame, text="New File", command=funcInfoButton, width=85)
+    iconButton.pack(side="left", expand=False, padx=20)
     
     return buttons
 
 def sidebar(root):
-    sidebar = ctk.CTkFrame(root, width=200, corner_radius=10,
+    sidebar = ctk.CTkScrollableFrame(root, width=200, corner_radius=10,
                            fg_color="#1e1e1e")
     sidebar.pack(pady=10, padx=10, side="left", fill="both")
-    sidebar.pack_propagate(False)
     
     return sidebar
 
@@ -133,8 +155,13 @@ def previewbox(root):
 
     return previewBox
 
+def reloadFileList(sidebarFrame, writingBox, updatePreview, openedFileButton):
+    for widget in sidebarFrame.winfo_children():
+        widget.destroy()
+    listFiles(sidebarFrame, writingBox, updatePreview, openedFileButton)
+
 # again, gemini because I don't feel like figuring out how to do this myself :3
-def listFiles(part, writingBox, updatePreview):
+def listFiles(part, writingBox, updatePreview, openedFileButton):
     notesDirectory = getJson.getSetting("NotesDirectory")
     if not os.path.exists(notesDirectory):
         print("Notes directory not found, creating one...")
@@ -143,13 +170,22 @@ def listFiles(part, writingBox, updatePreview):
     for fileName in os.listdir(notesDirectory):
         if fileName.endswith((".md", ".td", ".txt")):
             filePath = os.path.join(notesDirectory, fileName)
-            def load_file_content(path=filePath):
-                with open(path, "r") as file:
+            button = ctk.CTkButton(part, text=fileName, fg_color="transparent", hover_color="#555555")
+
+            def loadFileContent(path=filePath, btn=button):
+                if openedFileButton["button"]:
+                    openedFileButton["button"].configure(fg_color="transparent")
+
+                btn.configure(fg_color="#2b2b2b")
+                openedFileButton["button"] = btn
+
+                with open(path, "r", encoding='utf-8') as file:
                     content = file.read()
                 writingBox.delete("1.0", tk.END)
                 writingBox.insert("1.0", content)
                 updatePreview()
-            button = ctk.CTkButton(part, text=fileName, command=load_file_content)
+                
+            button.configure(command=loadFileContent)
             button.pack(pady=5, padx=10, fill="x")
             print(f"Loaded file: {fileName}")
 

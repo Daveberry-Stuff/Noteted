@@ -14,9 +14,6 @@ def initializeFirstTimeUI():
     ctk.set_appearance_mode("dark")
     ctk.set_default_color_theme("dark-blue")
 
-    # funny center window in screen :3
-    root.eval('tk::PlaceWindow . center')
-
     continue_pressed = False
     defaultSettings = {setting["key"]: setting["default"] for setting in settings.settingsDefinitions}
 
