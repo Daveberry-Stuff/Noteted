@@ -20,7 +20,7 @@ def newFile(reload_callback=None):
 
     iconPath = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets', 'NTD.ico')
     if os.path.exists(iconPath):
-        newFileWindow.iconbitmap(iconPath)
+        newFileWindow.after(200, lambda: newFileWindow.iconbitmap(iconPath))
 
     def createFileWithExtension(extension):
         baseName = fileNameEntry.get()
@@ -79,13 +79,12 @@ def info():
     infoWindow.geometry("400x300")
     infoWindow.resizable(False, False)
 
-    # Make this window modal (prevents interaction with the main window)
     infoWindow.transient()
     infoWindow.grab_set()
     
     iconPath = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets', 'NTD.ico')
     if os.path.exists(iconPath):
-        infoWindow.iconbitmap(iconPath)
+        infoWindow.after(200, lambda: infoWindow.iconbitmap(iconPath))
 
     def redirectGithub():
         webbrowser.open_new_tab("https://github.com/daveberrys/Noteted")

@@ -46,11 +46,18 @@ settingsDefinitions = [
 ]
 
 def initializeSettingsUI():
-    root = ctk.CTk()
+    root = ctk.CTkToplevel()
     root.title("Noteted - Settings")
     root.geometry("400x600")
     root.minsize(400, 600)
-    root.iconbitmap(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets', 'NTD.ico'))
+    
+    root.transient()
+    root.grab_set()
+
+    icon_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets', 'NTD.ico')
+    if os.path.exists(icon_path):
+        root.after(200, lambda: root.iconbitmap(icon_path))
+
     ctk.set_appearance_mode("dark")
     ctk.set_default_color_theme("dark-blue")
 
@@ -64,11 +71,9 @@ def initializeSettingsUI():
     def onClosed():
         print("Settings window closed!")
         saveSettings(currentSettings)
-
         root.destroy()
 
     root.protocol("WM_DELETE_WINDOW", onClosed)
-    root.mainloop()
 
 def listAllSettings(parent, currentSettings):
     for settingDef in settingsDefinitions:
