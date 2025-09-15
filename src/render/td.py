@@ -32,6 +32,7 @@ class TodoRenderer(ctk.CTkScrollableFrame):
                 boardName = boardMatch.group(1).strip()
                 boardLabel = ctk.CTkLabel(self.contentFrame, text=boardName, font=("Arial", 24, "bold"))
                 boardLabel.pack(anchor="w", pady=(10, 5), padx=10) 
+                boardLabel.bind("<Double-Button-1>", lambda event, li=i, label=boardLabel: self.startRename(event, li, label, "board"))
                 
                 boardFrame = ctk.CTkFrame(self.contentFrame, fg_color="transparent")
                 boardFrame.pack(fill="x", padx=10)
@@ -67,6 +68,7 @@ class TodoRenderer(ctk.CTkScrollableFrame):
         if status == '~':
             todoTextLabel.configure(text_color="gray")
         todoTextLabel.pack(side="left", padx=5)
+        todoTextLabel.bind("<Double-Button-1>", lambda event, li=lineIndex, label=todoTextLabel: self.startRename(event, li, label, "todo"))
 
         # Buttons
         deleteButton = ctk.CTkButton(todoFrame, text="[x]", width=30, fg_color="transparent", text_color="#E74C3C", hover_color="#555555")
@@ -86,6 +88,52 @@ class TodoRenderer(ctk.CTkScrollableFrame):
 
         addBoardButton = ctk.CTkButton(buttonFrame, text="[#]", width=30, command=self.addBoard, fg_color="transparent", text_color="gray", hover_color="#555555")
         addBoardButton.pack(side="left", padx=5)
+
+    def startRename(self, event, lineIndex, labelWidget, itemType):
+        # Hide the label
+        labelWidget.pack_forget()
+
+        # Create an Entry widget
+        entryWidget = ctk.CTkEntry(labelWidget.master, width=labelWidget.winfo_width())
+        entryWidget.insert(0, labelWidget.cget("text"))
+        
+        if itemType == "board":
+            entryWidget.pack(anchor="w", pady=(10, 5), padx=10, fill="x", expand=True)
+        elif itemType == "todo":
+            entryWidget.pack(side="left", padx=5, fill="x", expand=True)
+        
+        entryWidget.focus_set()
+
+        # Bind events to finish renaming
+        entryWidget.bind("<Return>", lambda event, li=lineIndex, oldLabel=labelWidget, entry=entryWidget, iType=itemType: self.finishRename(event, li, oldLabel, entry, iType))
+        entryWidget.bind("<FocusOut>", lambda event, li=lineIndex, oldLabel=labelWidget, entry=entryWidget, iType=itemType: self.finishRename(event, li, oldLabel, entry, iType))
+
+    def finishRename(self, event, lineIndex, oldLabelWidget, entryWidget, itemType):
+        newName = entryWidget.get().strip()
+        entryWidget.destroy() # Remove the entry widget
+
+        if newName: # Only update if new name is not empty
+            if itemType == "board":
+                # Update board name
+                oldLine = self.lines[lineIndex]
+                self.lines[lineIndex] = re.sub(r'###\s+.*', f'### {newName}', oldLine)
+            elif itemType == "todo":
+                # Update todo text, preserving status and indentation
+                oldLine = self.lines[lineIndex]
+                # Extract indentation and status
+                match = re.match(r'^(\s*)\[(.)\]\s+(.*)', oldLine)
+                if match:
+                    indent = match.group(1)
+                    status = match.group(2)
+                    self.lines[lineIndex] = f"{indent}[{status}] {newName}"
+            
+            self.saveAndRerender()
+        else:
+            # If new name is empty, just show the old label again
+            if itemType == "board":
+                oldLabelWidget.pack(anchor="w", pady=(10, 5), padx=10)
+            elif itemType == "todo":
+                oldLabelWidget.pack(side="left", padx=5)
 
     def addTodo(self):
         self.lines.append("[ ] New Todo")

@@ -183,11 +183,16 @@ def listFiles(part, writingBox, previewContainer, TDrenderFrame, updatePreview, 
             button = ctk.CTkButton(part, text=fileName, fg_color="transparent", hover_color="#555555")
 
             def loadFileContent(path=filePath, btn=button):
-                if openedFileButton["button"]:
-                    openedFileButton["button"].configure(fg_color="transparent")
+                # Store the currently opened button before changing it
+                previousOpenedButton = openedFileButton["button"]
 
-                btn.configure(fg_color="#2b2b2b")
+                # Update the openedFileButton to the new button
                 openedFileButton["button"] = btn
+                btn.configure(fg_color="#2b2b2b") # Set color for the newly opened button
+
+                # Now, if there was a previously opened button and it still exists, reset its color
+                if previousOpenedButton and previousOpenedButton.winfo_exists():
+                    previousOpenedButton.configure(fg_color="transparent")
 
                 with open(path, "r", encoding='utf-8') as file:
                     content = file.read()
@@ -210,9 +215,10 @@ def listFiles(part, writingBox, previewContainer, TDrenderFrame, updatePreview, 
                     # .txt: editor only
                     writingBox.pack(pady=0, padx=(0, 10), expand=True, fill="both", side="left")
                 elif path.endswith(".td"):
-                    # .td: renderer only
+                    # Show todo renderer, hide editor and preview
                     for widget in TDrenderFrame.winfo_children():
                         widget.destroy()
+
                     renderer = td_renderer.TodoRenderer(TDrenderFrame, content, path)
                     renderer.pack(expand=True, fill="both")
                     TDrenderFrame.pack(pady=0, padx=(0, 10), expand=True, fill="both", side="left")
