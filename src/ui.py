@@ -9,6 +9,7 @@ from tkhtmlview import HTMLLabel
 import src.settings as settingsUI
 import src.getFromJSON as getJson
 import src.NTDwindow as NTDwindow
+import src.render.td as td_renderer
 
 # ===== guess by the definition =====
 def initializeUI():
@@ -26,8 +27,15 @@ def initializeUI():
     # say hi to sidebarFrame AND topbarFrame because it's here to fix the FUCKING aligment :333
     topbarFrame = topbar(root)
     sidebarFrame = sidebar(root)
-    writingBox2 = textbox(root)
-    previewBox2 = previewbox(root)
+
+    mainContentFrame = ctk.CTkFrame(root, fg_color="transparent")
+    mainContentFrame.pack(pady=10, padx=0, expand=True, fill="both", side="left")
+
+    writingBox2 = textbox(mainContentFrame)
+    previewContainer = previewbox(mainContentFrame)
+    previewBox2 = previewContainer.label
+    TDrenderFrame = createTDrender(mainContentFrame)
+
     if getJson.getSetting("EnableDiscordRPC"):
         print("Discord RPC is enabled in settings! Initializing...")
         dcRPC(root)
@@ -49,14 +57,14 @@ def initializeUI():
 
         previewBox2.set_html(HTMLtext)
 
-    listFiles(sidebarFrame, writingBox2, updatePreview, openedFileButton)
+    listFiles(sidebarFrame, writingBox2, previewContainer, TDrenderFrame, updatePreview, openedFileButton)
     writingBox2.bind("<KeyRelease>", updatePreview)
 
     # Pass a callback to the buttons function to allow it to trigger a file list reload
-    def reload_callback():
-        reloadFileList(sidebarFrame, writingBox2, updatePreview, openedFileButton)
+    def reloadCallback():
+        reloadFileList(sidebarFrame, writingBox2, previewContainer, TDrenderFrame, updatePreview, openedFileButton)
 
-    buttons(topbarFrame, reload_callback)
+    buttons(topbarFrame, reloadCallback)
     root.mainloop()
 
 if __name__ == "__main__":
@@ -110,7 +118,7 @@ def buttons(frame, reloadList):
         optionsButton = ctk.CTkButton(buttonFrame, image=optionsIcon, text="", command=funcOptionsButton, width=button_size, height=button_size)
     else:
         optionsButton = ctk.CTkButton(buttonFrame, text="Options", command=funcOptionsButton, width=85)
-    optionsButton.pack(side="left", expand=False, padx=20)
+    optionsButton.pack(side="left", expand=False, padx=(20, 0))
 
     # new file
     newFileIconPath = os.path.join(base_path, 'assets', 'icons', 'buttons', 'file-plus.png')
@@ -120,7 +128,7 @@ def buttons(frame, reloadList):
         newFileButton = ctk.CTkButton(buttonFrame, image=newFileIcon, text="", command=lambda: funcNewFileButton(reloadList), width=button_size, height=button_size)
     else:
         newFileButton = ctk.CTkButton(buttonFrame, text="New File", command=funcNewFileButton, width=85)
-    newFileButton.pack(side="left", expand=False, padx=0)
+    newFileButton.pack(side="left", expand=False, padx=(20, 0))
     
     # new file
     infoIconPath = os.path.join(base_path, 'assets', 'icons', 'buttons', 'info.png')
@@ -129,7 +137,7 @@ def buttons(frame, reloadList):
         iconButton = ctk.CTkButton(buttonFrame, image=infoIcon, text="", command=funcInfoButton, width=button_size, height=button_size)
     else:
         iconButton = ctk.CTkButton(buttonFrame, text="New File", command=funcInfoButton, width=85)
-    iconButton.pack(side="left", expand=False, padx=20)
+    iconButton.pack(side="left", expand=False, padx=(20, 0))
     
     return buttons
 
@@ -140,28 +148,30 @@ def sidebar(root):
     
     return sidebar
 
-def textbox(root):
-    writingbox = ctk.CTkTextbox(root, width=400, height=300, corner_radius=10,
+def textbox(parent):
+    writingbox = ctk.CTkTextbox(parent, width=400, height=300, corner_radius=10,
                                 fg_color="#1e1e1e", font=("Arial", 14))
-    writingbox.pack(pady=10, padx=0, expand=True, fill="both", side="left")
+    writingbox.pack(padx=(0, 10), side="left", fill="both", expand=True)
     return writingbox
 
-def previewbox(root):
-    previewContainer = ctk.CTkFrame(root, corner_radius=10, fg_color="#1e1e1e")
-    previewContainer.pack(pady=10, padx=10, expand=True, fill="both", side="right")
-
+def previewbox(parent):
+    previewContainer = ctk.CTkFrame(parent, corner_radius=10, fg_color="#1e1e1e")
     previewBox = HTMLLabel(previewContainer, background='#1e1e1e')
     previewBox.pack(expand=True, fill="both", padx=5, pady=5)
+    previewContainer.label = previewBox
+    return previewContainer
 
-    return previewBox
+def createTDrender(parent):
+    td_renderer_container = ctk.CTkFrame(parent, corner_radius=0, fg_color="transparent")
+    return td_renderer_container
 
-def reloadFileList(sidebarFrame, writingBox, updatePreview, openedFileButton):
+def reloadFileList(sidebarFrame, writingBox, previewContainer, TDrenderFrame, updatePreview, openedFileButton):
     for widget in sidebarFrame.winfo_children():
         widget.destroy()
-    listFiles(sidebarFrame, writingBox, updatePreview, openedFileButton)
+    listFiles(sidebarFrame, writingBox, previewContainer, TDrenderFrame, updatePreview, openedFileButton)
 
 # again, gemini because I don't feel like figuring out how to do this myself :3
-def listFiles(part, writingBox, updatePreview, openedFileButton):
+def listFiles(part, writingBox, previewContainer, TDrenderFrame, updatePreview, openedFileButton):
     notesDirectory = getJson.getSetting("NotesDirectory")
     if not os.path.exists(notesDirectory):
         print("Notes directory not found, creating one...")
@@ -181,9 +191,31 @@ def listFiles(part, writingBox, updatePreview, openedFileButton):
 
                 with open(path, "r", encoding='utf-8') as file:
                     content = file.read()
+                
+                # Always update the textbox content
                 writingBox.delete("1.0", tk.END)
                 writingBox.insert("1.0", content)
-                updatePreview()
+
+                # Forget all main content widgets before packing new layout
+                writingBox.pack_forget()
+                previewContainer.pack_forget()
+                TDrenderFrame.pack_forget()
+
+                if path.endswith(".md"):
+                    # .md: editor | preview
+                    writingBox.pack(pady=0, padx=0, expand=True, fill="both", side="left")
+                    previewContainer.pack(pady=0, padx=10, expand=True, fill="both", side="right")
+                    updatePreview()
+                elif path.endswith(".txt"):
+                    # .txt: editor only
+                    writingBox.pack(pady=0, padx=(0, 10), expand=True, fill="both", side="left")
+                elif path.endswith(".td"):
+                    # .td: renderer only
+                    for widget in TDrenderFrame.winfo_children():
+                        widget.destroy()
+                    renderer = td_renderer.TodoRenderer(TDrenderFrame, content, path)
+                    renderer.pack(expand=True, fill="both")
+                    TDrenderFrame.pack(pady=0, padx=(0, 10), expand=True, fill="both", side="left")
                 
             button.configure(command=loadFileContent)
             button.pack(pady=5, padx=10, fill="x")

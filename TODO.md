@@ -59,3 +59,4 @@
 [x] First Time Use UI
     [x] Path Browser Thing
     [x] Discord RPC Option
+[ ] Organize Source and Assets Files
