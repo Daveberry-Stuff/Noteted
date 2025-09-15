@@ -76,7 +76,7 @@ def newFile(reload_callback=None):
 def info():
     infoWindow = ctk.CTkToplevel()
     infoWindow.title("Noteted - Info")
-    infoWindow.geometry("400x300")
+    infoWindow.geometry("400x325")
     infoWindow.resizable(False, False)
 
     infoWindow.transient()
@@ -99,17 +99,24 @@ def info():
         ctkImage = ctk.CTkImage(pilImage, size=(100, 100))
         
         imageLabel = ctk.CTkLabel(container, image=ctkImage, text="")
-        imageLabel.image = ctkImage  # Keep a reference
+        imageLabel.image = ctkImage
         imageLabel.pack(pady=10)
 
     # --- Text ---
+    versionPath = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'gitver.txt')
+    if os.path.exists(versionPath):
+        with open(versionPath, 'r') as f:
+            versionContent = f.read().strip()
+    
     titleText = ctk.CTkLabel(container, text="Noteted", font=ctk.CTkFont(size=24, weight="bold"))
     infoText = ctk.CTkLabel(container, text="A simple, free and open source note taking app.", wraplength=340)
     maintainerText = ctk.CTkLabel(container, text="Maintained by Daveberry Blueson.", wraplength=340)
+    versionText = ctk.CTkLabel(container, text=versionContent, wraplength=340)
     
     titleText.pack(pady=(0, 10))
     infoText.pack()
     maintainerText.pack()
+    versionText.pack()
 
     # --- Buttons ---
     buttonContainer = ctk.CTkFrame(container, fg_color="transparent")

@@ -1,8 +1,7 @@
 [x] Make the UI
-    [x] Textbox
-    [ ] Preview Box
-        [x] Markdown
-        [ ] Todo
+    [x] Textbox for TXT and Markdown
+    [x] Preview Box for Markdown
+    [x] Custom Renderer for TODO
     [x] Topbar
         [x] Add a "Options" button
         [x] Add a "New File" button
@@ -27,9 +26,18 @@
         ~~[x] Give the commit names have Timestamp~~
     [ ] Dark, Light and Custom Theme
         [x] Dark Theme
+            [x] Make the JSON
         [ ] Light Theme
+            [ ] Make the JSON
         [ ] Custom Theme
+            [ ] Code the handler
             [ ] Use JSON to make it easier to customize
+[ ] Check for updates
+    [ ] Make a `git fetch version` and compare it to the user's version and the git version.
+        [ ] If the user's version is not the same as git
+            [ ] Make a new window informing them that they have a old version
+        [ ] If the user's version is the same as git
+            [ ] The window will not pop up and the user can continue.
 [x] Make the code ignore other file extensions and only matter `.md`, `.td` and `.txt`
 [x] Make discord's RPC
 ~~[x] Fix Padding~~
