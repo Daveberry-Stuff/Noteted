@@ -35,7 +35,7 @@ jobs:
             - name: Upload Build for Linux
               uses: actions/upload-artifact@v4
               with:
-                name: 'Noteted'
+                name: 'Noteted-Linux'
                 path: 'dist/Noteted-Linux'
     Windows:
         runs-on: windows-latest
@@ -58,7 +58,7 @@ jobs:
             - name: Upload Build for Windows
               uses: actions/upload-artifact@v4
               with:
-                name: 'Noteted'
+                name: 'Noteted-Windows'
                 path: 'dist/Noteted-Windows.exe'
     MacOS:
         runs-on: macos-latest
@@ -81,6 +81,6 @@ jobs:
             - name: Upload Build for MacOS
               uses: actions/upload-artifact@v4
               with:
-                name: 'Noteted'
+                name: 'Noteted-MacOS'
                 path: 'dist/Noteted-MacOS'
                 
