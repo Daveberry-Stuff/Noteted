@@ -4,10 +4,40 @@ import os
 import webbrowser
 import datetime
 import src.getFromJSON as getJson
-import src.ui as ui
+import src.settings as Nsettings
 
 def delete():
     print("Delete window opened!")
+
+def settings():
+    root = ctk.CTkToplevel()
+    root.title("Noteted - Settings")
+    root.geometry("400x600")
+    root.minsize(400, 600)
+    
+    root.transient()
+    root.grab_set()
+
+    icon_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets', 'NTD.ico')
+    if os.path.exists(icon_path):
+        root.after(200, lambda: root.iconbitmap(icon_path))
+
+    ctk.set_appearance_mode("dark")
+    ctk.set_default_color_theme("dark-blue")
+
+    currentSettings = Nsettings.loadSettings()
+
+    settingContainer = ctk.CTkFrame(root, corner_radius=10, fg_color="#1e1e1e")
+    settingContainer.pack(pady=10, padx=10, expand=True, fill="both")
+
+    Nsettings.listAllSettings(settingContainer, currentSettings)
+
+    def onClosed():
+        print("Settings window closed!")
+        Nsettings.saveSettings(currentSettings)
+        root.destroy()
+
+    root.protocol("WM_DELETE_WINDOW", onClosed)
 
 def newFile(reload_callback=None):
     newFileWindow = ctk.CTkToplevel()
@@ -30,7 +60,7 @@ def newFile(reload_callback=None):
 
         fileName = f"{baseName}{extension}"
         notesDirectory = getJson.getSetting("NotesDirectory")
-        filePath = os.path.join(notesDirectory, fileName)
+        filePath = os.path.join(notesDirectory, fileName) # type: ignore
 
         if os.path.exists(filePath):
             print(f"File '{fileName}' already exists.")
@@ -99,7 +129,7 @@ def info():
         ctkImage = ctk.CTkImage(pilImage, size=(100, 100))
         
         imageLabel = ctk.CTkLabel(container, image=ctkImage, text="")
-        imageLabel.image = ctkImage
+        imageLabel.image = ctkImage # type: ignore
         imageLabel.pack(pady=10)
 
     # --- Text ---
@@ -111,7 +141,7 @@ def info():
     titleText = ctk.CTkLabel(container, text="Noteted", font=ctk.CTkFont(size=24, weight="bold"))
     infoText = ctk.CTkLabel(container, text="A simple, free and open source note taking app.", wraplength=340)
     maintainerText = ctk.CTkLabel(container, text="Maintained by Daveberry Blueson.", wraplength=340)
-    versionText = ctk.CTkLabel(container, text=versionContent, wraplength=340)
+    versionText = ctk.CTkLabel(container, text=versionContent, wraplength=340) # type: ignore
     
     titleText.pack(pady=(0, 10))
     infoText.pack()

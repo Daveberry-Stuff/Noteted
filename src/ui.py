@@ -33,7 +33,7 @@ def initializeUI():
 
     writingBox2 = textbox(mainContentFrame)
     previewContainer = previewbox(mainContentFrame)
-    previewBox2 = previewContainer.label
+    previewBox2 = previewContainer.label # type: ignore
     TDrenderFrame = createTDrender(mainContentFrame)
 
     if getJson.getSetting("EnableDiscordRPC"):
@@ -72,7 +72,7 @@ if __name__ == "__main__":
 
 # ===== button functions stuff =====
 def funcOptionsButton():
-    settingsUI.initializeSettingsUI()
+    NTDwindow.settings()
     
 def funcNewFileButton(reloadList):
     NTDwindow.newFile(reloadList)
@@ -114,7 +114,7 @@ def buttons(frame, reloadList):
     # options
     optionsIconPath = os.path.join(base_path, 'assets', 'icons', 'buttons', 'tool.png')
     if os.path.exists(optionsIconPath):
-        optionsIcon = ctk.CTkImage(recolorImage(optionsIconPath, color="#FFFFFF"), size=icon_size)
+        optionsIcon = ctk.CTkImage(recolorImage(optionsIconPath, color="#FFFFFF"), size=icon_size) # type: ignore
         optionsButton = ctk.CTkButton(buttonFrame, image=optionsIcon, text="", command=funcOptionsButton, width=button_size, height=button_size)
     else:
         optionsButton = ctk.CTkButton(buttonFrame, text="Options", command=funcOptionsButton, width=85)
@@ -124,16 +124,16 @@ def buttons(frame, reloadList):
     newFileIconPath = os.path.join(base_path, 'assets', 'icons', 'buttons', 'file-plus.png')
 
     if os.path.exists(newFileIconPath):
-        newFileIcon = ctk.CTkImage(recolorImage(newFileIconPath, color="#FFFFFF"), size=icon_size)
+        newFileIcon = ctk.CTkImage(recolorImage(newFileIconPath, color="#FFFFFF"), size=icon_size) # type: ignore
         newFileButton = ctk.CTkButton(buttonFrame, image=newFileIcon, text="", command=lambda: funcNewFileButton(reloadList), width=button_size, height=button_size)
     else:
-        newFileButton = ctk.CTkButton(buttonFrame, text="New File", command=funcNewFileButton, width=85)
+        newFileButton = ctk.CTkButton(buttonFrame, text="New File", command=funcNewFileButton, width=85) # type: ignore
     newFileButton.pack(side="left", expand=False, padx=(20, 0))
     
     # new file
     infoIconPath = os.path.join(base_path, 'assets', 'icons', 'buttons', 'info.png')
     if os.path.exists(infoIconPath):
-        infoIcon = ctk.CTkImage(recolorImage(infoIconPath, color="#FFFFFF"), size=icon_size)
+        infoIcon = ctk.CTkImage(recolorImage(infoIconPath, color="#FFFFFF"), size=icon_size) # type: ignore
         iconButton = ctk.CTkButton(buttonFrame, image=infoIcon, text="", command=funcInfoButton, width=button_size, height=button_size)
     else:
         iconButton = ctk.CTkButton(buttonFrame, text="New File", command=funcInfoButton, width=85)
@@ -158,7 +158,7 @@ def previewbox(parent):
     previewContainer = ctk.CTkFrame(parent, corner_radius=10, fg_color="#1e1e1e")
     previewBox = HTMLLabel(previewContainer, background='#1e1e1e')
     previewBox.pack(expand=True, fill="both", padx=5, pady=5)
-    previewContainer.label = previewBox
+    previewContainer.label = previewBox # type: ignore
     return previewContainer
 
 def createTDrender(parent):
@@ -173,13 +173,13 @@ def reloadFileList(sidebarFrame, writingBox, previewContainer, TDrenderFrame, up
 # again, gemini because I don't feel like figuring out how to do this myself :3
 def listFiles(part, writingBox, previewContainer, TDrenderFrame, updatePreview, openedFileButton):
     notesDirectory = getJson.getSetting("NotesDirectory")
-    if not os.path.exists(notesDirectory):
+    if not os.path.exists(notesDirectory): # type: ignore
         print("Notes directory not found, creating one...")
-        os.makedirs(notesDirectory)
+        os.makedirs(notesDirectory) # type: ignore
 
     for fileName in os.listdir(notesDirectory):
         if fileName.endswith((".md", ".td", ".txt")):
-            filePath = os.path.join(notesDirectory, fileName)
+            filePath = os.path.join(notesDirectory, fileName) # type: ignore
             button = ctk.CTkButton(part, text=fileName, fg_color="transparent", hover_color="#555555")
 
             def loadFileContent(path=filePath, btn=button):

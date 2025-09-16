@@ -5,7 +5,12 @@ import tkinter.messagebox as messagebox
 import os
 import json
 
-appdataDirectory = os.path.join(os.getenv('APPDATA'), "Noteted")
+#                            I'm sure one day this will be different becuase fuck all microsoft
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Microsoft: ~\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\Roaming\Noteted
+# Python: ~\AppData\Roaming\Noteted\
+
+appdataDirectory = os.path.join(os.getenv('APPDATA'), "Noteted") # type: ignore
 if not os.path.exists(appdataDirectory):
     os.makedirs(appdataDirectory)
 
@@ -40,40 +45,10 @@ settingsDefinitions = [
     {
         "name": "Notes Directory",
         "type": "path",
-        "default": os.path.join(appdataDirectory, "Notes"),
+        "default": os.path.expanduser('~') + os.path.sep + "Noteted Notes",
         "key": "NotesDirectory"
     }
 ]
-
-def initializeSettingsUI():
-    root = ctk.CTkToplevel()
-    root.title("Noteted - Settings")
-    root.geometry("400x600")
-    root.minsize(400, 600)
-    
-    root.transient()
-    root.grab_set()
-
-    icon_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets', 'NTD.ico')
-    if os.path.exists(icon_path):
-        root.after(200, lambda: root.iconbitmap(icon_path))
-
-    ctk.set_appearance_mode("dark")
-    ctk.set_default_color_theme("dark-blue")
-
-    currentSettings = loadSettings()
-
-    settingContainer = ctk.CTkFrame(root, corner_radius=10, fg_color="#1e1e1e")
-    settingContainer.pack(pady=10, padx=10, expand=True, fill="both")
-
-    listAllSettings(settingContainer, currentSettings)
-
-    def onClosed():
-        print("Settings window closed!")
-        saveSettings(currentSettings)
-        root.destroy()
-
-    root.protocol("WM_DELETE_WINDOW", onClosed)
 
 def listAllSettings(parent, currentSettings):
     for settingDef in settingsDefinitions:

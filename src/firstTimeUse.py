@@ -31,16 +31,16 @@ def initializeFirstTimeUI():
         settings.saveSettings(defaultSettings)
         root.destroy()
 
-    def set_continue_pressed():
+    def setContinuePressed():
         nonlocal continue_pressed
         continue_pressed = True
 
     root.protocol("WM_DELETE_WINDOW", onClosing)
-    setupWidgets(root, defaultSettings, set_continue_pressed)
+    setupWidgets(root, defaultSettings, setContinuePressed)
 
     root.mainloop()
 
-def setupWidgets(root, defaultSettings, set_continue_pressed):
+def setupWidgets(root, defaultSettings, setContinuePressed):
     container = ctk.CTkFrame(root, fg_color="transparent")
     container.pack(pady=20, padx=20, expand=True, fill="both")
 
@@ -83,7 +83,7 @@ def setupWidgets(root, defaultSettings, set_continue_pressed):
     # ------------ CONTINUE BUTTON ------------
     # deltarune ahh reference
     def proceed():
-        set_continue_pressed()
+        setContinuePressed()
         notesPath = pathEntry.get()
         if not os.path.exists(notesPath):
             os.makedirs(notesPath)

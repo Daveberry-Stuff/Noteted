@@ -30,12 +30,20 @@ class TodoRenderer(ctk.CTkScrollableFrame):
             boardMatch = re.match(r'^\s*###\s+(.*)', line)
             if boardMatch:
                 boardName = boardMatch.group(1).strip()
-                boardLabel = ctk.CTkLabel(self.contentFrame, text=boardName, font=("Arial", 24, "bold"))
-                boardLabel.pack(anchor="w", pady=(10, 5), padx=10) 
+                headerFrame = ctk.CTkFrame(self.contentFrame, fg_color="transparent")
+                headerFrame.pack(fill="x", padx=10, pady=(10, 5))
+
+                boardLabel = ctk.CTkLabel(headerFrame, text=boardName, font=("Arial", 24, "bold"))
+                boardLabel.pack(side="left", anchor="w")
                 boardLabel.bind("<Double-Button-1>", lambda event, li=i, label=boardLabel: self.startRename(event, li, label, "board"))
+
+                deleteButton = ctk.CTkButton(headerFrame, text="[x]", width=30, fg_color="transparent", text_color="#E74C3C", hover_color="#555555")
+                deleteButton.pack(side="right")
+                deleteButton.configure(command=lambda li=i: self.deleteLine(li))
                 
                 boardFrame = ctk.CTkFrame(self.contentFrame, fg_color="transparent")
                 boardFrame.pack(fill="x", padx=10)
+
                 self.boardFrames[boardName] = boardFrame
                 currentBoardFrame = boardFrame
                 continue
@@ -73,7 +81,7 @@ class TodoRenderer(ctk.CTkScrollableFrame):
         # Buttons
         deleteButton = ctk.CTkButton(todoFrame, text="[x]", width=30, fg_color="transparent", text_color="#E74C3C", hover_color="#555555")
         deleteButton.pack(side="right")
-        deleteButton.configure(command=lambda li=lineIndex: self.deleteTodo(li))
+        deleteButton.configure(command=lambda li=lineIndex: self.deleteLine(li))
         
         addSubButton = ctk.CTkButton(todoFrame, text="[+]", width=30, fg_color="transparent", text_color="gray", hover_color="#555555")
         addSubButton.pack(side="right")
@@ -131,7 +139,7 @@ class TodoRenderer(ctk.CTkScrollableFrame):
         else:
             # If new name is empty, just show the old label again
             if itemType == "board":
-                oldLabelWidget.pack(anchor="w", pady=(10, 5), padx=10)
+                oldLabelWidget.pack(side="left", anchor="w")
             elif itemType == "todo":
                 oldLabelWidget.pack(side="left", padx=5)
 
@@ -151,7 +159,7 @@ class TodoRenderer(ctk.CTkScrollableFrame):
         self.lines.insert(lineIndex + 1, f"{indent}  [ ] New Sub-Todo")
         self.saveAndRerender()
 
-    def deleteTodo(self, lineIndex):
+    def deleteLine(self, lineIndex):
         del self.lines[lineIndex]
         self.saveAndRerender()
 
@@ -194,7 +202,7 @@ class TodoRenderer(ctk.CTkScrollableFrame):
 
         # Check if all children of the parent are complete
         allChildrenComplete = True
-        parentIndent = len(re.match(r'^(\s*)', self.lines[parentLineIndex]).group(1))
+        parentIndent = len(re.match(r'^(\s*)', self.lines[parentLineIndex]).group(1)) # type: ignore
         for i in range(parentLineIndex + 1, len(self.lines)):
             childLine = self.lines[i]
             childMatch = re.match(r'^(\s*)', childLine)
