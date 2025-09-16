@@ -1,13 +1,17 @@
 # -*- mode: python ; coding: utf-8 -*-
 
-
 a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[],
-    hiddenimports=[],
-    hookspath=[],
+    datas=[
+        ('assets', 'assets'),
+        ('assets/theme/Amoled.json', 'assets/theme'),
+        ('assets/theme/Dark.json', 'assets/theme'),
+        ('assets/theme/Light.json', 'assets/theme')
+    ],
+    hiddenimports=['pypresence', 'tkhtmlview', 'PIL._tkinter_finder'],
+    hookspath=['hooks'],
     hooksconfig={},
     runtime_hooks=[],
     excludes=[],
