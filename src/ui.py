@@ -6,7 +6,6 @@ from PIL import Image, ImageColor
 import src.discord as dcPresence
 import markdown2
 from tkhtmlview import HTMLLabel
-import src.settings as settingsUI
 import src.getFromJSON as getJson
 import src.NTDwindow as NTDwindow
 import src.render.td as td_renderer
@@ -63,6 +62,8 @@ def initializeUI():
     # Pass a callback to the buttons function to allow it to trigger a file list reload
     def reloadCallback():
         reloadFileList(sidebarFrame, writingBox2, previewContainer, TDrenderFrame, updatePreview, openedFileButton)
+
+    bindKeybinds(root, reloadCallback, updatePreview)
 
     buttons(topbarFrame, reloadCallback)
     root.mainloop()
@@ -130,13 +131,13 @@ def buttons(frame, reloadList):
         newFileButton = ctk.CTkButton(buttonFrame, text="New File", command=funcNewFileButton, width=85) # type: ignore
     newFileButton.pack(side="left", expand=False, padx=(20, 0))
     
-    # new file
+    # info
     infoIconPath = os.path.join(base_path, 'assets', 'icons', 'buttons', 'info.png')
     if os.path.exists(infoIconPath):
         infoIcon = ctk.CTkImage(recolorImage(infoIconPath, color="#FFFFFF"), size=icon_size) # type: ignore
         iconButton = ctk.CTkButton(buttonFrame, image=infoIcon, text="", command=funcInfoButton, width=button_size, height=button_size)
     else:
-        iconButton = ctk.CTkButton(buttonFrame, text="New File", command=funcInfoButton, width=85)
+        iconButton = ctk.CTkButton(buttonFrame, text="Info", command=funcInfoButton, width=85)
     iconButton.pack(side="left", expand=False, padx=(20, 0))
     
     return buttons
@@ -238,3 +239,17 @@ def dcRPC(root):
         root.destroy()
 
     root.protocol("WM_DELETE_WINDOW", closing)
+    
+# ===== cool funny keybinds =====
+def bindKeybinds(widget, reloadList, updatePreview):
+    # widget.bind("<Control-s>", lambda event: NTDwindow.saveFile())
+    # widget.bind("<Control-S>", lambda event: NTDwindow.saveFile())
+    widget.bind("<Control-n>", lambda event: NTDwindow.newFile(reloadList))
+    widget.bind("<Control-N>", lambda event: NTDwindow.newFile(reloadList))
+    widget.bind("<Control-q>", lambda event: widget.quit())
+    widget.bind("<Control-Q>", lambda event: widget.quit())
+    widget.bind("<Control-d>", lambda event: NTDwindow.delete())
+    widget.bind("<Control-D>", lambda event: NTDwindow.delete())
+    widget.bind("<Control-r>", lambda event: reloadList())
+    widget.bind("<Control-R>", lambda event: reloadList())
+    widget.bind("<F5>", lambda event: updatePreview())
