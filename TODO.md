@@ -29,7 +29,7 @@
             [x] Make the JSON
         [x] Light Theme
             [x] Make the JSON
-        [x] Pure Black
+        [x] Pure Black Theme
             [x] Make the JSON
         [ ] Custom Theme
             [ ] Code the handler
@@ -70,7 +70,7 @@
 [x] First Time Use UI
     [x] Path Browser Thing
     [x] Discord RPC Option
-[ ] Organize Source and Assets Files
+[x] Organize Source and Assets Files
 [ ] Fix Renderers
     [ ] Markdown
         [ ] Add Strikethrough

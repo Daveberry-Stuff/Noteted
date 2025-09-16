@@ -1,5 +1,5 @@
 import os
-import src.settings as settings
+import src.backend.settings as settings
 import json
 
 def getSetting(key):

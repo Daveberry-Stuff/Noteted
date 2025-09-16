@@ -1,10 +1,11 @@
 import customtkinter as ctk
 import tkinter as tk
-import src.settings as settings
-import tkinter.filedialog as filedialog
-import os
 import sys
-import src.ui as ui
+import os
+import tkinter.filedialog as filedialog
+import src.backend.settings as settings
+import src.main.ui as ui
+import src.handler.path as pathHandler
 
 def initializeFirstTimeUI():
     root = ctk.CTk()
@@ -12,13 +13,13 @@ def initializeFirstTimeUI():
     root.geometry("400x300")
     root.minsize(400, 300)
 
-    base_dir = os.path.dirname(os.path.dirname(__file__))
+    baseDirectory = pathHandler.mainPath()
     if sys.platform == "win32":
-        iconPath = os.path.join(base_dir, 'assets', 'NTD.ico')
+        iconPath = os.path.join(baseDirectory, 'assets', 'NTD.ico')
         if os.path.exists(iconPath):
             root.iconbitmap(iconPath)
     else:
-        iconPath = os.path.join(base_dir, 'assets', 'NTD.png')
+        iconPath = os.path.join(baseDirectory, 'assets', 'NTD.png')
         if os.path.exists(iconPath):
             root.iconphoto(False, tk.PhotoImage(file=iconPath))
 

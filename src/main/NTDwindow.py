@@ -5,17 +5,18 @@ import os
 import sys
 import webbrowser
 import datetime
-import src.getFromJSON as getJson
-import src.settings as Nsettings
+import src.backend.getFromJSON as getJson
+import src.backend.settings as Nsettings
+import src.handler.path as pathHandler
 
 def topLevelIcon(toplevel_window):
-    base_dir = os.path.dirname(os.path.dirname(__file__))
+    baseDirectory = pathHandler.mainPath()
     if sys.platform == "win32":
-        iconPath = os.path.join(base_dir, 'assets', 'NTD.ico')
+        iconPath = os.path.join(baseDirectory, 'assets', 'NTD.ico')
         if os.path.exists(iconPath):
             toplevel_window.after(200, lambda: toplevel_window.iconbitmap(iconPath))
     else:
-        iconPath = os.path.join(base_dir, 'assets', 'NTD.png')
+        iconPath = os.path.join(baseDirectory, 'assets', 'NTD.png')
         if os.path.exists(iconPath):
             photo = tk.PhotoImage(file=iconPath)
             toplevel_window.iconphoto(False, photo)
@@ -131,7 +132,7 @@ def info():
     container.pack(pady=10, padx=10, expand=True, fill="both")
 
     # --- Image ---
-    logoPath = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets', 'NTD.png')
+    logoPath = os.path.join(pathHandler.assetsPath(), 'NTD.png')
     if os.path.exists(logoPath):
         pilImage = Image.open(logoPath)
         ctkImage = ctk.CTkImage(pilImage, size=(100, 100))
@@ -141,7 +142,7 @@ def info():
         imageLabel.pack(pady=10)
 
     # --- Text ---
-    versionPath = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'gitver.txt')
+    versionPath = os.path.join(pathHandler.mainPath(), 'gitver.txt')
     if os.path.exists(versionPath):
         with open(versionPath, 'r') as f:
             versionContent = f.read().strip()

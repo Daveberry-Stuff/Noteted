@@ -1,9 +1,9 @@
 import sys
 import os
 
-import src.ui as ui
-import src.firstTimeUse as firstTimeUse
-import src.settings as settings
+import src.main.ui as ui
+import src.main.firstTimeUse as firstTimeUse
+import src.backend.settings as settings
 
 if __name__ == "__main__":
     # Check if settings file exists to determine if it's the first run

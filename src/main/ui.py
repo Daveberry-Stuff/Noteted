@@ -4,12 +4,13 @@ import os
 import sys
 from tkinter import filedialog, messagebox
 from PIL import Image, ImageColor
-import src.discord as dcPresence
-import src.getFromJSON as getJson
-import src.NTDwindow as NTDwindow
-import src.render.todo as tdRenderer
-import src.render.markdown as markdownRenderer
-import src.render.text as textRenderer
+import src.backend.discord as dcPresence
+import src.backend.getFromJSON as getJson
+import src.main.NTDwindow as NTDwindow
+import src.renderers.todo as tdRenderer
+import src.renderers.markdown as markdownRenderer
+import src.renderers.text as textRenderer
+import src.handler.path as pathHandler
 
 # ===== guess by the definition =====
 def initializeUI():
@@ -18,13 +19,13 @@ def initializeUI():
     root.geometry("1280x720")
     root.minsize(800, 600)
 
-    base_dir = os.path.dirname(os.path.dirname(__file__))
+    baseDirectory = pathHandler.mainPath()
     if sys.platform == "win32":
-        iconPath = os.path.join(base_dir, 'assets', 'NTD.ico')
+        iconPath = os.path.join(baseDirectory, 'assets', 'NTD.ico')
         if os.path.exists(iconPath):
             root.iconbitmap(iconPath)
     else:
-        iconPath = os.path.join(base_dir, 'assets', 'NTD.png')
+        iconPath = os.path.join(baseDirectory, 'assets', 'NTD.png')
         if os.path.exists(iconPath):
             root.iconphoto(False, tk.PhotoImage(file=iconPath))
 
@@ -100,37 +101,36 @@ def topbar(root):
 
 def buttons(frame, reloadList):
     # icon buttons with text fallback meow :3
-    base_path = os.path.dirname(os.path.dirname(__file__))
-    icon_size = (20, 20)
-    button_size = 30
+    basePath = pathHandler.mainPath()
+    iconSize = (20, 20)
+    buttonSize = 30
     
     buttonFrame = ctk.CTkFrame(frame, fg_color="transparent")
     buttonFrame.pack(pady=10, padx=10, fill="x")
 
     # options
-    optionsIconPath = os.path.join(base_path, 'assets', 'icons', 'buttons', 'tool.png')
-    if os.path.exists(optionsIconPath):
-        optionsIcon = ctk.CTkImage(recolorImage(optionsIconPath, color="#FFFFFF"), size=icon_size) # type: ignore
-        optionsButton = ctk.CTkButton(buttonFrame, image=optionsIcon, text="", command=funcOptionsButton, width=button_size, height=button_size)
+    optionsIconPath = pathHandler.iconsPath("buttons", "tool.png")
+    if os.path.exists(optionsIconPath): # type: ignore
+        optionsIcon = ctk.CTkImage(recolorImage(optionsIconPath, color="#FFFFFF"), size=iconSize) # type: ignore
+        optionsButton = ctk.CTkButton(buttonFrame, image=optionsIcon, text="", command=funcOptionsButton, width=buttonSize, height=buttonSize)
     else:
         optionsButton = ctk.CTkButton(buttonFrame, text="Options", command=funcOptionsButton, width=85)
     optionsButton.pack(side="left", expand=False, padx=(20, 0))
 
     # new file
-    newFileIconPath = os.path.join(base_path, 'assets', 'icons', 'buttons', 'file-plus.png')
-
-    if os.path.exists(newFileIconPath):
-        newFileIcon = ctk.CTkImage(recolorImage(newFileIconPath, color="#FFFFFF"), size=icon_size) # type: ignore
-        newFileButton = ctk.CTkButton(buttonFrame, image=newFileIcon, text="", command=lambda: funcNewFileButton(reloadList), width=button_size, height=button_size)
+    newFileIconPath = pathHandler.iconsPath("buttons", "file-plus.png")
+    if os.path.exists(newFileIconPath): # type: ignore
+        newFileIcon = ctk.CTkImage(recolorImage(newFileIconPath, color="#FFFFFF"), size=iconSize) # type: ignore
+        newFileButton = ctk.CTkButton(buttonFrame, image=newFileIcon, text="", command=lambda: funcNewFileButton(reloadList), width=buttonSize, height=buttonSize)
     else:
         newFileButton = ctk.CTkButton(buttonFrame, text="New File", command=funcNewFileButton, width=85) # type: ignore
     newFileButton.pack(side="left", expand=False, padx=(20, 0))
     
     # info
-    infoIconPath = os.path.join(base_path, 'assets', 'icons', 'buttons', 'info.png')
-    if os.path.exists(infoIconPath):
-        infoIcon = ctk.CTkImage(recolorImage(infoIconPath, color="#FFFFFF"), size=icon_size) # type: ignore
-        iconButton = ctk.CTkButton(buttonFrame, image=infoIcon, text="", command=funcInfoButton, width=button_size, height=button_size)
+    infoIconPath = pathHandler.iconsPath("buttons", "info.png")
+    if os.path.exists(infoIconPath): # type: ignore
+        infoIcon = ctk.CTkImage(recolorImage(infoIconPath, color="#FFFFFF"), size=iconSize) # type: ignore
+        iconButton = ctk.CTkButton(buttonFrame, image=infoIcon, text="", command=funcInfoButton, width=buttonSize, height=buttonSize)
     else:
         iconButton = ctk.CTkButton(buttonFrame, text="Info", command=funcInfoButton, width=85)
     iconButton.pack(side="left", expand=False, padx=(20, 0))
