@@ -9,7 +9,8 @@
 <p>
     Heyo, mates! <br>
     I'm a (half) vibe coder, and I wanted to make a note taking app that's free and open source :) <br>
-    You don't have to pay me any money to keep this going, this is just a hobby project!
+    You don't have to pay me any money to keep this going, this is just a hobby project! <br>
+    (honestly I shoulve coded this in rust but it's too late now)
 </p>
 
 <details>
