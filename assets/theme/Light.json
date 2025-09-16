@@ -1,8 +1,9 @@
 {
     "accentColor": "#008BFF",
     "secondaryColor": "#008BFF",
-    "backgroundColor": "#242424",
-    "frameColor": "#1E1E1E",
-    "textBoxColor": "#343638",
-    "textColor": "#FFFFFF"
+    "backgroundColor": "#E4E4E4",
+    "frameColor": "#CACACA",
+    "textBoxColor": "#979797",
+    "textColor": "#000000",
+    "buttonColor": "#FFFFFF"
 }

@@ -14,13 +14,13 @@ def initializeFirstTimeUI():
 
     base_dir = os.path.dirname(os.path.dirname(__file__))
     if sys.platform == "win32":
-        icon_path = os.path.join(base_dir, 'assets', 'NTD.ico')
-        if os.path.exists(icon_path):
-            root.iconbitmap(icon_path)
+        iconPath = os.path.join(base_dir, 'assets', 'NTD.ico')
+        if os.path.exists(iconPath):
+            root.iconbitmap(iconPath)
     else:
-        icon_path = os.path.join(base_dir, 'assets', 'NTD.png')
-        if os.path.exists(icon_path):
-            root.iconphoto(False, tk.PhotoImage(file=icon_path))
+        iconPath = os.path.join(base_dir, 'assets', 'NTD.png')
+        if os.path.exists(iconPath):
+            root.iconphoto(False, tk.PhotoImage(file=iconPath))
 
     ctk.set_appearance_mode("dark")
     ctk.set_default_color_theme("dark-blue")

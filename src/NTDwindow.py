@@ -11,13 +11,13 @@ import src.settings as Nsettings
 def topLevelIcon(toplevel_window):
     base_dir = os.path.dirname(os.path.dirname(__file__))
     if sys.platform == "win32":
-        icon_path = os.path.join(base_dir, 'assets', 'NTD.ico')
-        if os.path.exists(icon_path):
-            toplevel_window.after(200, lambda: toplevel_window.iconbitmap(icon_path))
+        iconPath = os.path.join(base_dir, 'assets', 'NTD.ico')
+        if os.path.exists(iconPath):
+            toplevel_window.after(200, lambda: toplevel_window.iconbitmap(iconPath))
     else:
-        icon_path = os.path.join(base_dir, 'assets', 'NTD.png')
-        if os.path.exists(icon_path):
-            photo = tk.PhotoImage(file=icon_path)
+        iconPath = os.path.join(base_dir, 'assets', 'NTD.png')
+        if os.path.exists(iconPath):
+            photo = tk.PhotoImage(file=iconPath)
             toplevel_window.iconphoto(False, photo)
 
 def delete():
@@ -51,7 +51,7 @@ def settings():
 
     root.protocol("WM_DELETE_WINDOW", onClosed)
 
-def newFile(reload_callback=None):
+def newFile(reloadCallback=None):
     newFileWindow = ctk.CTkToplevel()
     newFileWindow.title("Noteted - New File")
     newFileWindow.geometry("450x150")
@@ -80,8 +80,8 @@ def newFile(reload_callback=None):
             with open(filePath, 'w') as f:
                 f.write("")
             print(f"File '{fileName}' created successfully.")
-            if reload_callback:
-                reload_callback()
+            if reloadCallback:
+                reloadCallback()
             newFileWindow.destroy()
         except Exception as e:
             print(f"Error creating file: {e}")

@@ -27,8 +27,10 @@
     [ ] Dark, Light and Custom Theme
         [x] Dark Theme
             [x] Make the JSON
-        [ ] Light Theme
-            [ ] Make the JSON
+        [x] Light Theme
+            [x] Make the JSON
+        [x] Pure Black
+            [x] Make the JSON
         [ ] Custom Theme
             [ ] Code the handler
             [ ] Use JSON to make it easier to customize
@@ -51,6 +53,7 @@
     [ ] Dropdown for theme
         [x] Dark Theme
         [x] Light Theme
+        [x] Pure Black Theme
         [ ] Custom Theme
             [ ] List every single custom theme Inside of `~/AppData/Local/Noteted/themes`
             [ ] Use JSON because for easier theme changing.
@@ -61,10 +64,16 @@
     [ ] Auto saving
     [x] Make switching through files actually functional
     [ ] Remove when `.md`, `.txt` or `.td` is in the name
-    [ ] Make a custom `.td` file
+    [x] Make a custom `.td` file
     [x] Add markdown support
 [x] Give Icons to everything
 [x] First Time Use UI
     [x] Path Browser Thing
     [x] Discord RPC Option
 [ ] Organize Source and Assets Files
+[ ] Fix Renderers
+    [ ] Markdown
+        [ ] Add Strikethrough
+        [ ] Add Dropdowns
+    [ ] Todo
+        [ ] Fix the GOD damn lag when adding/renaming/deleting TODO or Board.

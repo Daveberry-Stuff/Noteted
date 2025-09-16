@@ -5,11 +5,11 @@ import sys
 from tkinter import filedialog, messagebox
 from PIL import Image, ImageColor
 import src.discord as dcPresence
-import markdown2
-from tkhtmlview import HTMLLabel
 import src.getFromJSON as getJson
 import src.NTDwindow as NTDwindow
-import src.render.td as td_renderer
+import src.render.todo as tdRenderer
+import src.render.markdown as markdownRenderer
+import src.render.text as textRenderer
 
 # ===== guess by the definition =====
 def initializeUI():
@@ -20,16 +20,13 @@ def initializeUI():
 
     base_dir = os.path.dirname(os.path.dirname(__file__))
     if sys.platform == "win32":
-        icon_path = os.path.join(base_dir, 'assets', 'NTD.ico')
-        if os.path.exists(icon_path):
-            root.iconbitmap(icon_path)
+        iconPath = os.path.join(base_dir, 'assets', 'NTD.ico')
+        if os.path.exists(iconPath):
+            root.iconbitmap(iconPath)
     else:
-        icon_path = os.path.join(base_dir, 'assets', 'NTD.png')
-        if os.path.exists(icon_path):
-            root.iconphoto(False, tk.PhotoImage(file=icon_path))
-
-    ctk.set_appearance_mode("dark")
-    ctk.set_default_color_theme("dark-blue")
+        iconPath = os.path.join(base_dir, 'assets', 'NTD.png')
+        if os.path.exists(iconPath):
+            root.iconphoto(False, tk.PhotoImage(file=iconPath))
 
     # meow this is for the opened file background :3
     openedFileButton = {"button": None}
@@ -42,7 +39,7 @@ def initializeUI():
     mainContentFrame.pack(pady=10, padx=0, expand=True, fill="both", side="left")
 
     writingBox2 = textbox(mainContentFrame)
-    previewContainer = previewbox(mainContentFrame)
+    previewContainer = markdownRenderer.previewbox(mainContentFrame)
     previewBox2 = previewContainer.label # type: ignore
     TDrenderFrame = createTDrender(mainContentFrame)
 
@@ -52,29 +49,16 @@ def initializeUI():
     else:
         print("Discord RPC is disabled in settings")
 
-    # shout out to my boy gemini 2.4 pro and flash for this function!!!
-    def updatePreview(event=None):
-        markdownText = writingBox2.get("1.0", tk.END)
-        HTMLtext = markdown2.markdown(markdownText, extras=["fenced-code-blocks", "strike"])
+    def updatePreviewWrapper(event=None):
+        markdownRenderer.updatePreview(writingBox2, previewBox2)
 
-        # WACKy way to do it since there's no other way to do so--
-        tags2style = ["<p>", "<h1>", "<h2>", "<h3>", "<h4>", "<h5>", "<h6>", "<li>", "<strong>", "<em>", "<a>", "<s>"]
-        for tag in tags2style: 
-            HTMLtext = HTMLtext.replace(tag, tag[:-1] + ' style="color:white;">')
-        
-        HTMLtext = HTMLtext.replace('<pre>', '<pre style="background-color:#2b2b2b; padding:10px; border-radius:4px;">')
-        HTMLtext = HTMLtext.replace('<code>', '<code style="color:white;">')
+    listFiles(sidebarFrame, writingBox2, previewContainer, TDrenderFrame, updatePreviewWrapper, openedFileButton)
+    writingBox2.bind("<KeyRelease>", updatePreviewWrapper)
 
-        previewBox2.set_html(HTMLtext)
-
-    listFiles(sidebarFrame, writingBox2, previewContainer, TDrenderFrame, updatePreview, openedFileButton)
-    writingBox2.bind("<KeyRelease>", updatePreview)
-
-    # Pass a callback to the buttons function to allow it to trigger a file list reload
     def reloadCallback():
-        reloadFileList(sidebarFrame, writingBox2, previewContainer, TDrenderFrame, updatePreview, openedFileButton)
+        reloadFileList(sidebarFrame, writingBox2, previewContainer, TDrenderFrame, updatePreviewWrapper, openedFileButton)
 
-    bindKeybinds(root, reloadCallback, updatePreview)
+    bindKeybinds(root, reloadCallback, updatePreviewWrapper)
 
     buttons(topbarFrame, reloadCallback)
     root.mainloop()
@@ -166,13 +150,6 @@ def textbox(parent):
     writingbox.pack(padx=(0, 10), side="left", fill="both", expand=True)
     return writingbox
 
-def previewbox(parent):
-    previewContainer = ctk.CTkFrame(parent, corner_radius=10, fg_color="#1e1e1e")
-    previewBox = HTMLLabel(previewContainer, background='#1e1e1e')
-    previewBox.pack(expand=True, fill="both", padx=5, pady=5)
-    previewContainer.label = previewBox # type: ignore
-    return previewContainer
-
 def createTDrender(parent):
     td_renderer_container = ctk.CTkFrame(parent, corner_radius=0, fg_color="transparent")
     return td_renderer_container
@@ -219,19 +196,15 @@ def listFiles(part, writingBox, previewContainer, TDrenderFrame, updatePreview, 
                 TDrenderFrame.pack_forget()
 
                 if path.endswith(".md"):
-                    # .md: editor | preview
-                    writingBox.pack(pady=0, padx=0, expand=True, fill="both", side="left")
-                    previewContainer.pack(pady=0, padx=10, expand=True, fill="both", side="right")
-                    updatePreview()
+                    markdownRenderer.renderMarkdown(writingBox, previewContainer, updatePreview)
                 elif path.endswith(".txt"):
-                    # .txt: editor only
-                    writingBox.pack(pady=0, padx=(0, 10), expand=True, fill="both", side="left")
+                    textRenderer.render_text(writingBox)
                 elif path.endswith(".td"):
                     # Show todo renderer, hide editor and preview
                     for widget in TDrenderFrame.winfo_children():
                         widget.destroy()
 
-                    renderer = td_renderer.TodoRenderer(TDrenderFrame, content, path)
+                    renderer = tdRenderer.TodoRenderer(TDrenderFrame, content, path)
                     renderer.pack(expand=True, fill="both")
                     TDrenderFrame.pack(pady=0, padx=(0, 10), expand=True, fill="both", side="left")
                 

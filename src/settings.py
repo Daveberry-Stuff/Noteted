@@ -45,7 +45,8 @@ settingsDefinitions = [
     {
         "name": "Theme",
         "type": "dropdown",
-        "dropdown": ["Light", "Dark", "Custom"],
+        "dropdown": ["Light", "Dark", "Pure Black"],
+        # "dropdown": ["Light", "Dark", "Pure Black", "Custom"],
         "default": "Dark",
         "key": "Theme"
     },
