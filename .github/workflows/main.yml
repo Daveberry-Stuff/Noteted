@@ -1,7 +1,7 @@
 # got this off google stfu lmao
 # anyways, github workflow for Windows, MacOS and Linux.
 
-name: Python package
+name: Noteted App Builder
 
 on:
     push:
@@ -29,7 +29,7 @@ jobs:
             - name: Compile Linux
               run: |
                 pyinstaller Noteted.spec
-            - name: Upload Built for Linux
+            - name: Upload Build for Linux
               uses: actions/upload-artifact@v4
               with:
                 name: 'Noteted'
@@ -49,7 +49,7 @@ jobs:
             - name: Compile Windows
               run: |
                 pyinstaller Noteted.spec
-            - name: Upload Built for Windows
+            - name: Upload Build for Windows
               uses: actions/upload-artifact@v4
               with:
                 name: 'Noteted'
@@ -69,7 +69,7 @@ jobs:
             - name: Compile MacOS
               run: |
                 pyinstaller Noteted.spec
-            - name: Upload Built for MacOS
+            - name: Upload Build for MacOS
               uses: actions/upload-artifact@v4
               with:
                 name: 'Noteted'
