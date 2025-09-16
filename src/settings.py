@@ -3,18 +3,31 @@ import tkinter as tk
 import tkinter.filedialog as filedialog
 import tkinter.messagebox as messagebox
 import os
+import sys
 import json
 
-#                            I'm sure one day this will be different becuase fuck all microsoft
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Microsoft: ~\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\Roaming\Noteted
-# Python: ~\AppData\Roaming\Noteted\
+# silly main
+#     - Windows: %APPDATA%/Noteted
+#     - Linux: ~/.config/Noteted (or $XDG_CONFIG_HOME/Noteted)
+#     - macOS: ~/Library/Application Support/Noteted
 
-appdataDirectory = os.path.join(os.getenv('APPDATA'), "Noteted") # type: ignore
-if not os.path.exists(appdataDirectory):
-    os.makedirs(appdataDirectory)
+def getAppConfigDirectory():
+    if sys.platform == 'win32':
+        appdata = os.getenv('APPDATA')
+        if appdata:
+            return os.path.join(appdata, 'Noteted')
+    elif sys.platform == 'linux': # Linux
+        return os.path.join(os.getenv('XDG_CONFIG_HOME', os.path.join(os.path.expanduser('~'), '.config')), 'Noteted')
+    elif sys.platform == 'darwin': # macOS
+        return os.path.join(os.path.expanduser('~'), 'Library', 'Application Support', 'Noteted')
+    # fallback for other systems or if APPDATA is not set
+    return os.path.join(os.path.expanduser('~'), '.noteted')
 
-settingsFile = os.path.join(appdataDirectory, 'settings.json')
+appDirectory = getAppConfigDirectory()
+if not os.path.exists(appDirectory):
+    os.makedirs(appDirectory)
+
+settingsFile = os.path.join(appDirectory, 'settings.json')
 
 def loadSettings():
     try:
@@ -45,7 +58,7 @@ settingsDefinitions = [
     {
         "name": "Notes Directory",
         "type": "path",
-        "default": os.path.expanduser('~') + os.path.sep + "Noteted Notes",
+        "default": os.path.join(os.path.expanduser('~'), "Documents", "Noteted Notes"),
         "key": "NotesDirectory"
     }
 ]

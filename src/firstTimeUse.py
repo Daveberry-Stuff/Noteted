@@ -3,6 +3,7 @@ import tkinter as tk
 import src.settings as settings
 import tkinter.filedialog as filedialog
 import os
+import sys
 import src.ui as ui
 
 def initializeFirstTimeUI():
@@ -10,7 +11,17 @@ def initializeFirstTimeUI():
     root.title("Noteted - First Time Setup")
     root.geometry("400x300")
     root.minsize(400, 300)
-    root.iconbitmap(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets', 'NTD.ico'))
+
+    base_dir = os.path.dirname(os.path.dirname(__file__))
+    if sys.platform == "win32":
+        icon_path = os.path.join(base_dir, 'assets', 'NTD.ico')
+        if os.path.exists(icon_path):
+            root.iconbitmap(icon_path)
+    else:
+        icon_path = os.path.join(base_dir, 'assets', 'NTD.png')
+        if os.path.exists(icon_path):
+            root.iconphoto(False, tk.PhotoImage(file=icon_path))
+
     ctk.set_appearance_mode("dark")
     ctk.set_default_color_theme("dark-blue")
 

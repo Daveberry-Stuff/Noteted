@@ -1,6 +1,7 @@
 import customtkinter as ctk
 import tkinter as tk
 import os
+import sys
 from tkinter import filedialog, messagebox
 from PIL import Image, ImageColor
 import src.discord as dcPresence
@@ -16,7 +17,17 @@ def initializeUI():
     root.title("Noteted")
     root.geometry("1280x720")
     root.minsize(800, 600)
-    root.iconbitmap(os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets', 'NTD.ico'))
+
+    base_dir = os.path.dirname(os.path.dirname(__file__))
+    if sys.platform == "win32":
+        icon_path = os.path.join(base_dir, 'assets', 'NTD.ico')
+        if os.path.exists(icon_path):
+            root.iconbitmap(icon_path)
+    else:
+        icon_path = os.path.join(base_dir, 'assets', 'NTD.png')
+        if os.path.exists(icon_path):
+            root.iconphoto(False, tk.PhotoImage(file=icon_path))
+
     ctk.set_appearance_mode("dark")
     ctk.set_default_color_theme("dark-blue")
 

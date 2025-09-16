@@ -1,10 +1,24 @@
 import customtkinter as ctk
+import tkinter as tk
 from PIL import Image
 import os
+import sys
 import webbrowser
 import datetime
 import src.getFromJSON as getJson
 import src.settings as Nsettings
+
+def topLevelIcon(toplevel_window):
+    base_dir = os.path.dirname(os.path.dirname(__file__))
+    if sys.platform == "win32":
+        icon_path = os.path.join(base_dir, 'assets', 'NTD.ico')
+        if os.path.exists(icon_path):
+            toplevel_window.after(200, lambda: toplevel_window.iconbitmap(icon_path))
+    else:
+        icon_path = os.path.join(base_dir, 'assets', 'NTD.png')
+        if os.path.exists(icon_path):
+            photo = tk.PhotoImage(file=icon_path)
+            toplevel_window.iconphoto(False, photo)
 
 def delete():
     print("Delete window opened!")
@@ -16,11 +30,9 @@ def settings():
     root.minsize(400, 600)
     
     root.transient()
-    root.grab_set()
+    root.after(10, root.grab_set)
 
-    icon_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets', 'NTD.ico')
-    if os.path.exists(icon_path):
-        root.after(200, lambda: root.iconbitmap(icon_path))
+    topLevelIcon(root)
 
     ctk.set_appearance_mode("dark")
     ctk.set_default_color_theme("dark-blue")
@@ -46,11 +58,9 @@ def newFile(reload_callback=None):
     newFileWindow.resizable(False, False)
 
     newFileWindow.transient()
-    newFileWindow.grab_set()
+    newFileWindow.after(10, newFileWindow.grab_set)
 
-    iconPath = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets', 'NTD.ico')
-    if os.path.exists(iconPath):
-        newFileWindow.after(200, lambda: newFileWindow.iconbitmap(iconPath))
+    topLevelIcon(newFileWindow)
 
     def createFileWithExtension(extension):
         baseName = fileNameEntry.get()
@@ -110,11 +120,9 @@ def info():
     infoWindow.resizable(False, False)
 
     infoWindow.transient()
-    infoWindow.grab_set()
+    infoWindow.after(10, infoWindow.grab_set)
     
-    iconPath = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'assets', 'NTD.ico')
-    if os.path.exists(iconPath):
-        infoWindow.after(200, lambda: infoWindow.iconbitmap(iconPath))
+    topLevelIcon(infoWindow)
 
     def redirectGithub():
         webbrowser.open_new_tab("https://github.com/daveberrys/Noteted")
