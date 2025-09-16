@@ -4,12 +4,7 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[
-        ('assets', 'assets'),
-        ('assets/theme/Pure Black.json', 'assets/theme'),
-        ('assets/theme/Dark.json', 'assets/theme'),
-        ('assets/theme/Light.json', 'assets/theme')
-    ],
+    datas=[('assets', 'assets')],
     hiddenimports=['pypresence', 'tkhtmlview', 'PIL._tkinter_finder'],
     hookspath=['hooks'],
     hooksconfig={},

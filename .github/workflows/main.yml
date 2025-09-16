@@ -13,50 +13,74 @@ env:
     pythonVersion: 3.12
 
 jobs:
-    build:
-        name: Build for ${{ matrix.os_name }}
-        runs-on: ${{ matrix.os }}
-        strategy:
-          fail-fast: false
-          matrix:
-            include:
-              - os: ubuntu-latest
-                os_name: Linux
-              - os: windows-latest
-                os_name: Windows
-              - os: macos-latest
-                os_name: MacOS
-
+    Linux:
+        runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
-
+            - uses: actions/checkout@v2
             - name: Set up Python ${{ env.pythonVersion }}
-              uses: actions/setup-python@v4
+              uses: actions/setup-python@v2
               with:
                 python-version: ${{ env.pythonVersion }}
-
             - name: Install dependencies
               run: |
                 python -m pip install --upgrade pip
                 pip install -r requirements.txt
-
-            - name: Install Tkinter (Linux)
-              if: matrix.os_name == 'Linux'
-              run: sudo apt-get install -y python3-tk
-
-            - name: Compile with PyInstaller
-              run: pyinstaller Noteted.spec
-
-            - name: Rename Build (Linux/macOS)
-              if: runner.os != 'Windows'
-              run: mv dist/Noteted dist/Noteted-${{ matrix.os_name }}
-
-            - name: Rename Build (Windows)
-              if: runner.os == 'Windows'
-              run: move dist\Noteted dist\Noteted-${{ matrix.os_name }}
-
-            - name: Upload Build Artifact
+                sudo apt-get install python3-tk 
+            - name: Compile Linux
+              run: |
+                pyinstaller Noteted.spec
+            - name: Rename Build
+              run: |
+                mv dist/Noteted dist/Noteted-Linux
+            - name: Upload Build for Linux
               uses: actions/upload-artifact@v4
               with:
-                name: Noteted-${{ matrix.os_name }}
-                path: dist/Noteted-${{ matrix.os_name }}
+                name: 'Noteted'
+                path: 'dist/Noteted-Linux'
+    Windows:
+        runs-on: windows-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Set up Python ${{ env.pythonVersion }}
+              uses: actions/setup-python@v2
+              with:
+                python-version: ${{ env.pythonVersion }}
+            - name: Install dependencies
+              run: |
+                python -m pip install --upgrade pip
+                pip install -r requirements.txt
+            - name: Compile Windows
+              run: |
+                pyinstaller Noteted.spec
+            - name: Rename Build
+              run: |
+                move dist\Noteted.exe dist\Noteted-Windows.exe
+            - name: Upload Build for Windows
+              uses: actions/upload-artifact@v4
+              with:
+                name: 'Noteted'
+                path: 'dist/Noteted-Windows.exe'
+    MacOS:
+        runs-on: macos-latest
+        steps:
+            - uses: actions/checkout@v2
+            - name: Set up Python ${{ env.pythonVersion }}
+              uses: actions/setup-python@v2
+              with:
+                python-version: ${{ env.pythonVersion }}
+            - name: Install dependencies
+              run: |
+                python -m pip install --upgrade pip
+                pip install -r requirements.txt
+            - name: Compile MacOS
+              run: |
+                pyinstaller Noteted.spec
+            - name: Rename Build
+              run: |
+                mv dist/Noteted dist/Noteted-MacOS
+            - name: Upload Build for MacOS
+              uses: actions/upload-artifact@v4
+              with:
+                name: 'Noteted'
+                path: 'dist/Noteted-MacOS'
+                
