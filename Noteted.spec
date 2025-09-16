@@ -6,7 +6,7 @@ a = Analysis(
     binaries=[],
     datas=[
         ('assets', 'assets'),
-        ('assets/theme/Amoled.json', 'assets/theme'),
+        ('assets/theme/Pure Black.json', 'assets/theme'),
         ('assets/theme/Dark.json', 'assets/theme'),
         ('assets/theme/Light.json', 'assets/theme')
     ],
