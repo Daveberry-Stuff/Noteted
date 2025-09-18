@@ -187,7 +187,7 @@ def listFiles(part, writingBox, previewContainer, TDrenderFrame, updatePreview, 
     for fileName in os.listdir(notesDirectory):
         if fileName.endswith((".md", ".td", ".txt")):
             filePath = os.path.join(notesDirectory, fileName) # type: ignore
-            button = ctk.CTkButton(part, text=fileName, fg_color="transparent", hover_color="#555555", text_color=themeHandler.getThemePart("text"))
+            button = ctk.CTkButton(part, text=fileName, fg_color="transparent", hover_color=themeHandler.getThemePart("hover"), text_color=themeHandler.getThemePart("text"))
 
             def loadFileContent(path=filePath, btn=button):
                 # Store the currently opened button before changing it
@@ -195,7 +195,7 @@ def listFiles(part, writingBox, previewContainer, TDrenderFrame, updatePreview, 
 
                 # Update the openedFileButton to the new button
                 openedFileButton["button"] = btn
-                btn.configure(fg_color="#2b2b2b") # Set color for the newly opened button
+                btn.configure(fg_color=themeHandler.getThemePart("selected")) # Set color for the newly opened button
 
                 # Now, if there was a previously opened button and it still exists, reset its color
                 if previousOpenedButton and previousOpenedButton.winfo_exists():

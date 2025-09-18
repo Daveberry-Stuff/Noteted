@@ -45,6 +45,8 @@ def getThemePart(part):
         themeGot = theme.get("frameColor", {})
     elif part == "textBox":
         themeGot = theme.get("textBoxColor", {})
+    elif part == "selected":
+        themeGot = theme.get("selectedColor", {})
     elif part == "hover":
         themeGot = theme.get("hoverColor", {})
     elif part == "text":

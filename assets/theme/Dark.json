@@ -4,6 +4,7 @@
     "backgroundColor": "#242424",
     "frameColor": "#1E1E1E",
     "textBoxColor": "#343638",
+    "selectedColor": "#2b2b2b",
     "hoverColor": "#555555",
     "textColor": "#FFFFFF",
     "buttonColor": "#FFFFFF",
