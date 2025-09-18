@@ -4,6 +4,10 @@
     "backgroundColor": "#242424",
     "frameColor": "#1E1E1E",
     "textBoxColor": "#343638",
+    "hoverColor": "#555555",
     "textColor": "#FFFFFF",
-    "buttonColor": "#FFFFFF"
+    "buttonColor": "#FFFFFF",
+
+    "ctkWindowAppearanceMode": "dark",
+    "ctkDefaultColorTheme": "dark-blue"
 }

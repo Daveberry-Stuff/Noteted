@@ -1,10 +1,11 @@
 import customtkinter as ctk
 import tkinter as tk
 import re
+import src.handler.theme as themeHandler
 
 class TodoRenderer(ctk.CTkScrollableFrame):
     def __init__(self, parent, fileContent, filePath):
-        super().__init__(parent, fg_color="#1e1e1e")
+        super().__init__(parent, fg_color=themeHandler.getThemePart("frame"))
         self.filePath = filePath
         self.lines = fileContent.split('\n')
         self.contentFrame = None
@@ -200,7 +201,6 @@ class TodoRenderer(ctk.CTkScrollableFrame):
         
         if parentLineIndex == -1: return # No parent found
 
-        # Check if all children of the parent are complete
         allChildrenComplete = True
         parentIndent = len(re.match(r'^(\s*)', self.lines[parentLineIndex]).group(1)) # type: ignore
         for i in range(parentLineIndex + 1, len(self.lines)):
@@ -213,7 +213,7 @@ class TodoRenderer(ctk.CTkScrollableFrame):
                         allChildrenComplete = False
                         break
                 elif childIndent <= parentIndent:
-                    break # Reached a sibling or a line in another branch
+                    break
         
         if allChildrenComplete:
             self.lines[parentLineIndex] = self.lines[parentLineIndex].replace("[ ]", "[x]")

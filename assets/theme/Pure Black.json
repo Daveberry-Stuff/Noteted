@@ -1,9 +1,13 @@
 {
     "accentColor": "#008BFF",
     "secondaryColor": "#008BFF",
-    "backgroundColor": "#000000FF",
-    "frameColor": "#0A0A0AFF",
-    "textBoxColor": "#1F1F1FFF",
+    "backgroundColor": "#000000",
+    "frameColor": "#0A0A0A",
+    "textBoxColor": "#1F1F1F",
+    "hoverColor": "#333333",
     "textColor": "#FFFFFF",
-    "buttonColor": "#FFFFFF"
+    "buttonColor": "#FFFFFF",
+
+    "ctkWindowAppearanceMode": "dark",
+    "ctkDefaultColorTheme": "dark-blue"
 }

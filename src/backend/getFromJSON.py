@@ -8,7 +8,7 @@ def getSetting(key):
         return settingsData[key]
     else:
         # return default value meow
-        for setting in settings.settingsDefinitions:
+        for setting in settings.getSettingsDef(settingsData):
             if setting["key"] == key:
                 return setting["default"]
     return None

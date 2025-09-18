@@ -4,7 +4,7 @@ import sys
 import os
 import tkinter.filedialog as filedialog
 import src.backend.settings as settings
-import src.main.ui as ui
+import src.main.Noteted as Noteted
 import src.handler.path as pathHandler
 
 def initializeFirstTimeUI():
@@ -27,7 +27,7 @@ def initializeFirstTimeUI():
     ctk.set_default_color_theme("dark-blue")
 
     continue_pressed = False
-    defaultSettings = {setting["key"]: setting["default"] for setting in settings.settingsDefinitions}
+    defaultSettings = {setting["key"]: setting["default"] for setting in settings.getSettingsDef({})}
 
     def onClosing():
         # this handels the person closing this window
@@ -64,7 +64,7 @@ def setupWidgets(root, defaultSettings, setContinuePressed):
 
     # ------------ NOTES PATH DIRECTORY ------------
     notesDirDefault = ""
-    for settingDef in settings.settingsDefinitions:
+    for settingDef in settings.getSettingsDef({}):
         if settingDef["key"] == "NotesDirectory":
             notesDirDefault = settingDef["default"]
             break
@@ -106,7 +106,7 @@ def setupWidgets(root, defaultSettings, setContinuePressed):
         settings.saveSettings(finalSettings)
         
         root.destroy()
-        ui.initializeUI()
+        Noteted.initializeUI()
 
     continueButton = ctk.CTkButton(container, text="Continue", command=proceed)
     continueButton.pack(side="bottom")

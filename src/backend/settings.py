@@ -41,30 +41,58 @@ def saveSettings(settingsData):
     with open(settingsFile, 'w') as f:
         json.dump(settingsData, f, indent=4)
 
-settingsDefinitions = [
-    {
-        "name": "Theme",
-        "type": "dropdown",
-        "dropdown": ["Light", "Dark", "Pure Black"],
-        # "dropdown": ["Light", "Dark", "Pure Black", "Custom"],
-        "default": "Dark",
-        "key": "Theme"
-    },
-    {
-        "name": "Enable Discord RPC",
-        "type": "bool",
-        "default": True,
-        "key": "EnableDiscordRPC"
-    },
-    {
-        "name": "Notes Directory",
-        "type": "path",
-        "default": os.path.join(os.path.expanduser('~'), "Documents", "Noteted Notes"),
-        "key": "NotesDirectory"
-    }
-]
+def getSettingsDef(currentSettings):
+    settingsDefinitions = [
+        {
+            "name": "Theme",
+            "type": "dropdown",
+            "dropdown": ["Light", "Dark", "Pure Black"],
+            "default": "Dark",
+            "key": "Theme"
+        },
+        {
+            "name": "Notes Directory",
+            "type": "path",
+            "default": os.path.join(os.path.expanduser('~'), "Documents", "Noteted Notes"),
+            "key": "NotesDirectory"
+        },
+        {
+            "name": "Enable Discord RPC",
+            "type": "bool",
+            "default": True,
+            "key": "EnableDiscordRPC"
+        }
+    ]
+
+    if currentSettings.get("EnableDiscordRPC", True):
+        settingsDefinitions.extend([
+            {
+                "name": "Discord RPC Details",
+                "type": "text",
+                "default": "Using Noteted.",
+                "key": "DiscordRPCdetails"
+            },
+            {
+                "name": "Discord RPC State",
+                "type": "text",
+                "default": "Taking notes, as usual.",
+                "key": "DiscordRPCstate"
+            }
+        ])
+
+    settingsDefinitions.extend([
+        {
+            "name": "Enable Auto Saving",
+            "type": "bool",
+            "default": True,
+            "key": "EnableAutoSaving"
+        }
+    ])
+
+    return settingsDefinitions
 
 def listAllSettings(parent, currentSettings):
+    settingsDefinitions = getSettingsDef(currentSettings)
     for settingDef in settingsDefinitions:
         settingName = settingDef["name"]
         settingType = settingDef["type"]
@@ -83,15 +111,12 @@ def listAllSettings(parent, currentSettings):
             settingOptionMenu = ctk.CTkOptionMenu(settingFrame, values=settingDef["dropdown"])
             settingOptionMenu.set(currentValue)
             settingOptionMenu.pack(side="right", padx=(5, 0))
-            settingOptionMenu.configure(command=lambda value, key=settingKey: updateSetting(key, value, currentSettings))
+            settingOptionMenu.configure(command=lambda value, key=settingKey: updateSetting(key, value, currentSettings, parent))
         elif settingType == "bool":
-            settingCheckbox = ctk.CTkCheckBox(settingFrame, text="", onvalue=True, offvalue=False)
+            boolVar = tk.BooleanVar(value=currentValue)
+            settingCheckbox = ctk.CTkCheckBox(settingFrame, text="", variable=boolVar, onvalue=True, offvalue=False)
             settingCheckbox.pack(side="right", padx=(5, 0))
-            if currentValue:
-                settingCheckbox.select()
-            else:
-                settingCheckbox.deselect()
-            settingCheckbox.configure(command=lambda key=settingKey: updateSetting(key, settingCheckbox.get(), currentSettings))
+            boolVar.trace("w", lambda *args, key=settingKey, var=boolVar: updateSetting(key, var.get(), currentSettings, parent))
         elif settingType == "path":
             pathEntry = ctk.CTkEntry(settingFrame, width=200)
             pathEntry.insert(0, currentValue)
@@ -102,12 +127,21 @@ def listAllSettings(parent, currentSettings):
                 if directory:
                     entry_widget.delete(0, tk.END)
                     entry_widget.insert(0, directory)
-                    updateSetting(key, directory, currentSettings)
+                    updateSetting(key, directory, currentSettings, parent)
 
             browseButton = ctk.CTkButton(settingFrame, text="Browse", command=browsePath, width=70)
             browseButton.pack(side="right", padx=(5, 0))
-            pathEntry.bind("<FocusOut>", lambda event, key=settingKey, entry=pathEntry: updateSetting(key, entry.get(), currentSettings))
+            pathEntry.bind("<FocusOut>", lambda event, key=settingKey, entry=pathEntry: updateSetting(key, entry.get(), currentSettings, parent))
+        elif settingType == "text":
+            settingEntry = ctk.CTkEntry(settingFrame, width=200)
+            settingEntry.insert(0, currentValue)
+            settingEntry.pack(side="right", padx=(5, 0))
+            settingEntry.bind("<FocusOut>", lambda event, key=settingKey, entry=settingEntry: updateSetting(key, entry.get(), currentSettings, parent))
 
-    def updateSetting(key, value, settings_dict):
-        settings_dict[key] = value
-        print(f"Setting {key} updated to {value}")
+def updateSetting(key, value, settings_dict, parent):
+    print(f"updateSetting - key: {key}, value: {value}")
+    settings_dict[key] = value
+    print(f"Setting {key} updated to {value}")
+    for widget in parent.winfo_children():
+        widget.destroy()
+    listAllSettings(parent, settings_dict)
