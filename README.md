@@ -6,11 +6,22 @@
     ⚠️ STILL IN EARLY DEVELOPMENT! WILL HAVE BUGS. ⚠️
 </h2>
 
+<h1>
+    <img src="https://daveberry.netlify.app/assets/main/dave.png" width="40"> Heya folks!
+</h1>
 <p>
-    Heyo, mates! <br>
-    I'm a (half) vibe coder, and I wanted to make a note taking app that's free and open source :) <br>
-    You don't have to pay me any money to keep this going, this is just a hobby project! <br>
-    (honestly I shoulve coded this in rust but it's too late now)
+    This is Noteted! A Free forever and open source note taking app. <br>
+    It's coded in Python, but planned to coded in Rust. <br>
+</p>
+
+<p>
+    This is just a <b>hobby project</b>, you don't have to pay me to continue this! <br>
+    Although, if you want to help me out, do a PR, or give me an issue or give me tips on how to code better! <br>
+    Anything can help me out!
+</p>
+
+<p>
+    don't make fun of me i just started python like a few weeks ago 😭
 </p>
 
 <details>
@@ -18,18 +29,26 @@
     <ol>
         <li>Download python <br>
             - <a href="https://www.python.org/downloads/">https://www.python.org/downloads/</a> <br>
+            - Do NOT get the Microsoft version of python.
         </li>
         <li>Clone the git <br>
             - Run the command in the terminal: <code>git clone https://daveberrys/noteted.git</code> <br>
         </li>
-        <li>Run the command <code>pip install -r requirements.txt</code> <br>
+        <li>Install dependencies <br>
+            - Run the command in the terminal: <code>pip install -r requirements.txt</code> <br>
             - This will install all the required libraries for this project! <br>
             - Note, if you want to isolate the libraries from your seprate python, do <code>py -m venv venv</code> <br>
             - And then, run <code>venv\Scripts\Activate</code> <br>
             - Then, run <code>pip install -r requirements.txt</code> <br>
         </li>
-        <li>Run the command <code>py main.py</code> <br>
+        <li>Open the app by file <br>
+            - Run the command in the terminal: <code>py main.py</code> <br>
+        </li>
             - If you're having troubles, please do an issue! <br>
+        </li>
+        <li>If you want to try to compile for pyinstaller: <br>
+            - Run the command in the terminal: <code>pyinstaller Noteted.spec</code> <br>
+            - Wait for a bit and once it finishes, it's at the <code>dist/</code> folder!
         </li>
         <li>All set! <br>
         </li>
@@ -39,42 +58,19 @@
 <details>
     <summary> Features </summary>
     <ol>
-        <li> 
-            Open source.
+        <li>Free and Open Source.</li>
+        <li>No paywall stuff.</li>
+        <li>Simplicity UI.</li>
+        <li>Coded in Python. (Rust coming soon...)</li>
+        <li>Markdown Support.</li>
+        <li>Custom file. <br>
+            - <code>.td</code> Special custom renderer!
         </li>
-        <li> 
-            Free Forever.
+        <li>Discord RPC support.</li>
+        <li>Themeing.<br>
+            - Dark, Light. Pure Black mode.
+            - Custom theming coming soon...
         </li>
-        <li> 
-            No paywall bullcrap.
-        </li>
-        <li>
-            Auto-save. <br>
-            - Risk-free of losing your precious markdowns!
-        </li>
-        <li>
-            Coded in Python. <br>
-            - Honestly needed an excuse on how I learnt python myself.
-        </li>
-        <li>
-            Markdown support. <br>
-            - What's a good note taking app without markdown? <br>
-            - Most note taking app does this, but they all suck.
-        </li>
-        <li> 
-            TODO custom file support. <br>
-            - What's a good note taking app without TODO list? <br>
-            - Ooh, a custom file?
-        </li>
-        <li>
-            Custom Theme <br>
-            - Be cozy, or be weird! <br>
-            - Handled with JSON in `~/AppData/Local/Noteted`!
-        </li>
-        <li>
-            Discord RPC <br>
-            - Let your friends know you're busy! <br>
-            - Or, make up an excuse on you're busy.
-        </li>
+        <li>Autosaving every 10 seconds.</li>
     </ol>
 </details>
