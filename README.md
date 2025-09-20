@@ -11,7 +11,7 @@
 </h1>
 <p>
     This is Noteted! A Free forever and open source note taking app. <br>
-    It's coded in Python, but planned to coded in Rust. <br>
+    It's coded in Python. (planned to be recoded in Rust.) <br>
 </p>
 
 <p>
