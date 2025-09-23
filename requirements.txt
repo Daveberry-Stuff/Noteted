@@ -4,7 +4,3 @@ Pillow
 markdown2
 tkhtmlview
 pyinstaller
-
-# pygame
-# requests
-# gitpython
