@@ -41,6 +41,7 @@ def getThemePart(part):
         themeGot = theme.get("secondaryColor", {})
     elif part == "background":
         themeGot = theme.get("backgroundColor", {})
+
     elif part == "frame":
         themeGot = theme.get("frameColor", {})
     elif part == "textBox":
@@ -49,10 +50,14 @@ def getThemePart(part):
         themeGot = theme.get("selectedColor", {})
     elif part == "hover":
         themeGot = theme.get("hoverColor", {})
+    elif part == "rightClick":
+        themeGot = theme.get("rightClickMenuColor", {})
+
     elif part == "text":
         themeGot = theme.get("textColor", {})
     elif part == "button":
         themeGot = theme.get("buttonColor", {})
+
     elif part == "WPM":
         themeGot = theme.get("ctkWindowAppearanceMode", {})
     elif part == "DCT":

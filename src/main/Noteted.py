@@ -14,6 +14,7 @@ import src.renderers.text as textRenderer
 import src.handler.path as pathHandler
 import src.handler.saving as savingHandler
 import src.handler.theme as themeHandler
+import src.handler.rightClickMenu as rightClickMenu
 
 # ===== guess by the definition =====
 def initializeUI():
@@ -46,6 +47,10 @@ def initializeUI():
     mainContentFrame.pack(pady=10, padx=0, expand=True, fill="both", side="left")
 
     writingBox2 = textbox(mainContentFrame)
+
+    rightClickSidebar = rightClickMenu.RightClickMenu(root)
+    sidebarFrame.bind("<Button-3>", rightClickSidebar.popup)
+
     previewContainer = markdownRenderer.previewbox(mainContentFrame)
     previewBox2 = previewContainer.label # type: ignore
     TDrenderFrame = createTDrender(mainContentFrame)
@@ -72,11 +77,11 @@ def initializeUI():
     def updatePreviewWrapper(event=None):
         markdownRenderer.updatePreview(writingBox2, previewBox2)
 
-    listFiles(sidebarFrame, writingBox2, previewContainer, TDrenderFrame, updatePreviewWrapper, openedFileButton, saver)
+    listFiles(sidebarFrame, writingBox2, previewContainer, TDrenderFrame, updatePreviewWrapper, openedFileButton, saver, rightClickSidebar.popup)
     writingBox2.bind("<KeyRelease>", updatePreviewWrapper)
 
     def reloadCallback():
-        reloadFileList(sidebarFrame, writingBox2, previewContainer, TDrenderFrame, updatePreviewWrapper, openedFileButton, saver)
+        reloadFileList(sidebarFrame, writingBox2, previewContainer, TDrenderFrame, updatePreviewWrapper, openedFileButton, saver, rightClickSidebar.popup)
 
     bindKeybinds(root, reloadCallback, updatePreviewWrapper, saver)
 
@@ -172,13 +177,13 @@ def createTDrender(parent):
     tdRendererContainer = ctk.CTkFrame(parent, corner_radius=0, fg_color="transparent")
     return tdRendererContainer
 
-def reloadFileList(sidebarFrame, writingBox, previewContainer, TDrenderFrame, updatePreview, openedFileButton, saver):
+def reloadFileList(sidebarFrame, writingBox, previewContainer, TDrenderFrame, updatePreview, openedFileButton, saver, popupMenu):
     for widget in sidebarFrame.winfo_children():
         widget.destroy()
-    listFiles(sidebarFrame, writingBox, previewContainer, TDrenderFrame, updatePreview, openedFileButton, saver)
+    listFiles(sidebarFrame, writingBox, previewContainer, TDrenderFrame, updatePreview, openedFileButton, saver, popupMenu)
 
 # again, gemini because I don't feel like figuring out how to do this myself :3
-def listFiles(part, writingBox, previewContainer, TDrenderFrame, updatePreview, openedFileButton, saver):
+def listFiles(part, writingBox, previewContainer, TDrenderFrame, updatePreview, openedFileButton, saver, popupMenu):
     notesDirectory = getJson.getSetting("NotesDirectory")
     if not os.path.exists(notesDirectory): # type: ignore
         print("Notes directory not found, creating one...")
@@ -188,6 +193,7 @@ def listFiles(part, writingBox, previewContainer, TDrenderFrame, updatePreview, 
         if fileName.endswith((".md", ".td", ".txt")):
             filePath = os.path.join(notesDirectory, fileName) # type: ignore
             button = ctk.CTkButton(part, text=fileName, fg_color="transparent", hover_color=themeHandler.getThemePart("hover"), text_color=themeHandler.getThemePart("text"))
+            button.bind("<Button-3>", popupMenu)
 
             def loadFileContent(path=filePath, btn=button):
                 # Store the currently opened button before changing it
