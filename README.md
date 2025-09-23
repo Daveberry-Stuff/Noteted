@@ -74,3 +74,5 @@
         <li>Autosaving every 10 seconds.</li>
     </ol>
 </details>
+
+<!-- mb the discord embed broke and im testing it out rq -->
