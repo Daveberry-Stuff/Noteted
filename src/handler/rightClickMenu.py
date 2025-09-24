@@ -19,15 +19,14 @@ class RightClickMenu(ctk.CTkToplevel):
         self.frame = ctk.CTkFrame(self, corner_radius=5, fg_color=themeHandler.getThemePart("rightClick"))
         self.frame.pack(expand=True, fill="both")
 
-        self.add_command(label="Delete", command=self.delete)
-        self.add_command(label="Rename", command=self.rename)
-        self.add_command(label="Pin", command=self.pin)
-        self.add_command(label="Lock", command=self.lock)
-        self.add_command(label="Cancel", command=self.cancel)
+        self.addCommand(label="Delete", command=self.delete)
+        self.addCommand(label="Rename", command=self.rename)
+        self.addCommand(label="Pin", command=self.pin)
+        self.addCommand(label="Lock", command=self.lock)
 
         self.withdraw()
 
-    def add_command(self, label, command):
+    def addCommand(self, label, command):
         button = ctk.CTkButton(self.frame, text=label, command=command, anchor="w", corner_radius=5, fg_color="transparent", hover_color=themeHandler.getThemePart("selected"), text_color=themeHandler.getThemePart("text"))
         button.pack(in_=self.frame, fill="x", padx=10, pady=5)
 
@@ -41,9 +40,9 @@ class RightClickMenu(ctk.CTkToplevel):
         self.geometry(f"+{x}+{y}")
         self.lift()
         self.focus_set()
-        self.bind("<FocusOut>", self.on_focus_out)
+        self.bind("<FocusOut>", self.onFocusOut)
 
-    def on_focus_out(self, event):
+    def onFocusOut(self, event):
         self.withdraw()
 
     def delete(self):
@@ -56,8 +55,4 @@ class RightClickMenu(ctk.CTkToplevel):
         self.withdraw()
 
     def lock(self):
-        self.withdraw()
-    
-    def cancel(self):
-        print("Cancelled")
         self.withdraw()

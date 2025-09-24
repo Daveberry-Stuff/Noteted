@@ -7,7 +7,7 @@
 </h2>
 
 <h1>
-    <img src="https://daveberry.netlify.app/assets/main/dave.png" width="40"> Heya folks!
+    Heya folks!
 </h1>
 <p>
     This is Noteted! A Free forever and open source note taking app. <br>
@@ -29,10 +29,10 @@
     <ol>
         <li>Download python <br>
             - <a href="https://www.python.org/downloads/">https://www.python.org/downloads/</a> <br>
-            - Do NOT get the Microsoft version of python.
+            - Do <b>NOT</b> get the Microsoft version of python.
         </li>
         <li>Clone the git <br>
-            - Run the command in the terminal: <code>git clone https://daveberrys/noteted.git</code> <br>
+            - Run the command in the terminal: <code>git clone https://github.com/Daveberry-Stuff/Noteted-Website.git</code> <br>
         </li>
         <li>Install dependencies <br>
             - Run the command in the terminal: <code>pip install -r requirements.txt</code> <br>
@@ -73,6 +73,33 @@
         </li>
         <li>Autosaving every 10 seconds.</li>
     </ol>
+</details>
+
+<details>
+    <summary>Contributors</summary>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Link</th>
+                <th>Contributed to</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Daveberry Blueson -->
+            <tr>
+                <th>Daveberry Blueson</th>
+                <th><a href="https://daveberry.netlify.app/">https://daveberry.netlify.app/</a></th>
+                <th>Founder, Programmer, Designer</th>
+            </tr>
+            <!-- Feather Icons -->
+            <tr>
+                <th>Feather Icons</th>
+                <th><a href="https://feathericons.com/">https://feathericons.com/</a></th>
+                <th>Providing the icons.</th>
+            </tr>
+        </tbody>
+    </table>
 </details>
 
 <!-- mb the discord embed broke and im testing it out rq -->

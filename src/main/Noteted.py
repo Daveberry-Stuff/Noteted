@@ -63,7 +63,6 @@ def initializeUI():
     else:
         print("Discord RPC is disabled in settings")
 
-
     def closing():
         if pathHandler.getSetting("EnableDiscordRPC"):
             # hey dw about this it's just to make sure it stops properly
