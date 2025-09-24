@@ -192,27 +192,22 @@ def listFiles(part, writingBox, previewContainer, TDrenderFrame, updatePreview, 
             button.bind("<Button-3>", lambda event, path=filePath: popupMenu(event, path))
 
             def loadFileContent(path=filePath, btn=button):
-                # Store the currently opened button before changing it
                 previousOpenedButton = openedFileButton["button"]
 
-                # Update the openedFileButton to the new button
                 openedFileButton["button"] = btn
-                btn.configure(fg_color=themeHandler.getThemePart("selected")) # Set color for the newly opened button
+                btn.configure(fg_color=themeHandler.getThemePart("selected"))
 
-                # Now, if there was a previously opened button and it still exists, reset its color
                 if previousOpenedButton and previousOpenedButton.winfo_exists():
                     previousOpenedButton.configure(fg_color="transparent")
 
                 with open(path, "r", encoding='utf-8') as file:
                     content = file.read()
                 
-                # Always update the textbox content
                 writingBox.delete("1.0", tk.END)
                 writingBox.insert("1.0", content)
 
                 saver.start(path, lambda: writingBox.get("1.0", tk.END))
 
-                # Forget all main content widgets before packing new layout
                 writingBox.pack_forget()
                 previewContainer.pack_forget()
                 TDrenderFrame.pack_forget()
@@ -223,7 +218,6 @@ def listFiles(part, writingBox, previewContainer, TDrenderFrame, updatePreview, 
                     textRenderer.render_text(writingBox)
                 elif path.endswith(".td"):
                     saver.stop()
-                    # Show todo renderer, hide editor and preview
                     for widget in TDrenderFrame.winfo_children():
                         widget.destroy()
 
