@@ -1,5 +1,13 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+import sys
+
+# Set the icon file based on the platform
+if sys.platform == 'win32':
+    icon_file = 'assets/NTD.ico'
+else:
+    icon_file = 'assets/NTD.png'
+
 a = Analysis(
     ['main.py'],
     pathex=[],
@@ -34,4 +42,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    icon=icon_file,
 )
