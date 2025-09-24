@@ -18,21 +18,13 @@ class Saver:
                     f.write(content)
                 print(f"Saved {self.filePath}")
 
-                # Save to the other format as well
                 base, ext = os.path.splitext(self.filePath)
-                if ext == '.md':
-                    otherExt = '.txt'
-                elif ext == '.txt':
-                    otherExt = '.md'
-                else:
-                    otherExt = None
-
-                if otherExt:
-                    otherFilePath = base + otherExt
-                    if not os.path.exists(otherFilePath):
-                        with open(otherFilePath, 'w', encoding='utf-8') as f:
+                if ext:
+                    filePath = base + ext
+                    if not os.path.exists(filePath):
+                        with open(filePath, 'w', encoding='utf-8') as f:
                             f.write(content)
-                        print(f"Saved {otherFilePath}")
+                        print(f"Saved {filePath}")
 
             except Exception as e:
                 print(f"Error saving file: {e}")

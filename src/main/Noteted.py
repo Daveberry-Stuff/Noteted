@@ -258,7 +258,6 @@ def bindKeybinds(widget, reloadList, updatePreview, saver):
     widget.bind("<Control-Q>", lambda event: widget.destroy())
     widget.bind("<Control-r>", lambda event: reloadList())
     widget.bind("<Control-R>", lambda event: reloadList())
-    widget.bind("<F5>", lambda event: updatePreview())
 
 # ===== refresh ui for theme! =====
 def refreshUI(root):
