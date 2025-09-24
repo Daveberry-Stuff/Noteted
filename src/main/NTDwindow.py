@@ -26,7 +26,7 @@ def topLevelIcon(toplevel_window):
 def delete(filePath, reload_callback):
     deleteWindow = ctk.CTkToplevel()
     deleteWindow.title("Noteted - Delete")
-    deleteWindow.geometry("400x150")
+    deleteWindow.geometry("400x100")
     deleteWindow.resizable(False, False)
 
     deleteWindow.configure(fg_color=themeHandler.getThemePart("background"))
@@ -54,7 +54,7 @@ def delete(filePath, reload_callback):
     container.pack(pady=10, padx=10, expand=True, fill="both")
 
     label = ctk.CTkLabel(container, text=f"Are you sure you want to delete ''' {os.path.basename(filePath)} '''?", wraplength=380, text_color=themeHandler.getThemePart("text"))
-    label.pack(pady=10, padx=10, expand=True, fill="both")
+    label.pack(pady=(3, 0), padx=5, expand=True, fill="both")
 
     buttonFrame = ctk.CTkFrame(container, fg_color="transparent")
     buttonFrame.pack(pady=10, padx=10, fill="x")
@@ -172,7 +172,7 @@ def newFile(reloadCallback=None):
     def createFileWithExtension(extension):
         baseName = fileNameEntry.get()
         if not baseName:
-            print("Filename cannot be empty.")
+            messageBox("Error", "File name cannot be empty.")
             return
 
         fileName = f"{baseName}{extension}"
@@ -180,7 +180,7 @@ def newFile(reloadCallback=None):
         filePath = os.path.join(notesDirectory, fileName) # type: ignore
 
         if os.path.exists(filePath):
-            print(f"File '''{fileName}''' already exists.")
+            messageBox("Error", "File already exists.")
             return
 
         try:
@@ -191,7 +191,7 @@ def newFile(reloadCallback=None):
                 reloadCallback()
             newFileWindow.destroy()
         except Exception as e:
-            print(f"Error creating file: {e}")
+            messageBox("Error", f"Error creating file: {e}")
 
     container = ctk.CTkFrame(newFileWindow, fg_color=themeHandler.getThemePart("frame"))
     container.pack(pady=10, padx=10, expand=True, fill="both")
