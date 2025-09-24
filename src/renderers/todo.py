@@ -21,13 +21,12 @@ class TodoRenderer(ctk.CTkScrollableFrame):
         self.boardFrames = {}
         currentBoardFrame = self.contentFrame
 
-        # Create a default board frame for todos that are not under any board
         defaultBoardFrame = ctk.CTkFrame(self.contentFrame, fg_color="transparent")
         defaultBoardFrame.pack(fill="x", padx=10)
         currentBoardFrame = defaultBoardFrame
 
         for i, line in enumerate(self.lines):
-            # Board
+            # -- Board -- 
             boardMatch = re.match(r'^\s*###\s+(.*)', line)
             if boardMatch:
                 boardName = boardMatch.group(1).strip()
@@ -49,7 +48,7 @@ class TodoRenderer(ctk.CTkScrollableFrame):
                 currentBoardFrame = boardFrame
                 continue
 
-            # Todo
+            # -- Todo -- 
             todoMatch = re.match(r'^(\s*)\[(.)\]\s+(.*)', line)
             if todoMatch:
                 indent = len(todoMatch.group(1))
@@ -58,28 +57,27 @@ class TodoRenderer(ctk.CTkScrollableFrame):
                 
                 self.renderTodoItem(currentBoardFrame, i, indent, status, text)
         
-        # Add new todo/board buttons
         self.renderGlobalButtons()
 
     def renderTodoItem(self, parent, lineIndex, indent, status, text):
         todoFrame = ctk.CTkFrame(parent, fg_color="transparent")
         todoFrame.pack(anchor="w", fill="x", padx=(indent * 20, 0))
 
-        # Checkbox
+        # -- Checkbox -- 
         checkboxText = {' ': '[ ]', 'x': '[x]', '~': '[~]'}.get(status, '[ ]')
         checkbox = ctk.CTkButton(todoFrame, text=checkboxText, width=30, fg_color="transparent", text_color="#3498DB", hover_color="#555555")
         checkbox.pack(side="left")
         checkbox.configure(command=lambda li=lineIndex: self.toggleTodo(li))
         checkbox.bind("<Button-3>", lambda event, li=lineIndex: self.cancelTodo(event, li))
 
-        # Text
+        # -- Text -- 
         todoTextLabel = ctk.CTkLabel(todoFrame, text=text)
         if status == '~':
             todoTextLabel.configure(text_color="gray")
         todoTextLabel.pack(side="left", padx=5)
         todoTextLabel.bind("<Double-Button-1>", lambda event, li=lineIndex, label=todoTextLabel: self.startRename(event, li, label, "todo"))
 
-        # Buttons
+        # -- Buttons -- 
         deleteButton = ctk.CTkButton(todoFrame, text="[x]", width=30, fg_color="transparent", text_color="#E74C3C", hover_color="#555555")
         deleteButton.pack(side="right")
         deleteButton.configure(command=lambda li=lineIndex: self.deleteLine(li))
@@ -99,10 +97,8 @@ class TodoRenderer(ctk.CTkScrollableFrame):
         addBoardButton.pack(side="left", padx=5)
 
     def startRename(self, event, lineIndex, labelWidget, itemType):
-        # Hide the label
         labelWidget.pack_forget()
 
-        # Create an Entry widget
         entryWidget = ctk.CTkEntry(labelWidget.master, width=labelWidget.winfo_width())
         entryWidget.insert(0, labelWidget.cget("text"))
         
@@ -113,23 +109,19 @@ class TodoRenderer(ctk.CTkScrollableFrame):
         
         entryWidget.focus_set()
 
-        # Bind events to finish renaming
         entryWidget.bind("<Return>", lambda event, li=lineIndex, oldLabel=labelWidget, entry=entryWidget, iType=itemType: self.finishRename(event, li, oldLabel, entry, iType))
         entryWidget.bind("<FocusOut>", lambda event, li=lineIndex, oldLabel=labelWidget, entry=entryWidget, iType=itemType: self.finishRename(event, li, oldLabel, entry, iType))
 
     def finishRename(self, event, lineIndex, oldLabelWidget, entryWidget, itemType):
         newName = entryWidget.get().strip()
-        entryWidget.destroy() # Remove the entry widget
+        entryWidget.destroy()
 
-        if newName: # Only update if new name is not empty
+        if newName:
             if itemType == "board":
-                # Update board name
                 oldLine = self.lines[lineIndex]
                 self.lines[lineIndex] = re.sub(r'###\s+.*', f'### {newName}', oldLine)
             elif itemType == "todo":
-                # Update todo text, preserving status and indentation
                 oldLine = self.lines[lineIndex]
-                # Extract indentation and status
                 match = re.match(r'^(\s*)\[(.)\]\s+(.*)', oldLine)
                 if match:
                     indent = match.group(1)
@@ -138,7 +130,6 @@ class TodoRenderer(ctk.CTkScrollableFrame):
             
             self.saveAndRerender()
         else:
-            # If new name is empty, just show the old label again
             if itemType == "board":
                 oldLabelWidget.pack(side="left", anchor="w")
             elif itemType == "todo":
@@ -187,7 +178,7 @@ class TodoRenderer(ctk.CTkScrollableFrame):
         if not match: return
         
         currentIndent = len(match.group(1))
-        if currentIndent == 0: return # Not a sub-todo
+        if currentIndent == 0: return
 
         parentLineIndex = -1
         for i in range(lineIndex - 1, -1, -1):
@@ -199,7 +190,7 @@ class TodoRenderer(ctk.CTkScrollableFrame):
                     parentLineIndex = i
                     break
         
-        if parentLineIndex == -1: return # No parent found
+        if parentLineIndex == -1: return
 
         allChildrenComplete = True
         parentIndent = len(re.match(r'^(\s*)', self.lines[parentLineIndex]).group(1)) # type: ignore

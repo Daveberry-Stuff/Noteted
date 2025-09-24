@@ -23,8 +23,107 @@ def topLevelIcon(toplevel_window):
             photo = tk.PhotoImage(file=iconPath)
             toplevel_window.iconphoto(False, photo)
 
-def delete():
-    print("Delete window opened!")
+def delete(filePath, reload_callback):
+    deleteWindow = ctk.CTkToplevel()
+    deleteWindow.title("Noteted - Delete")
+    deleteWindow.geometry("400x150")
+    deleteWindow.resizable(False, False)
+
+    deleteWindow.configure(fg_color=themeHandler.getThemePart("background"))
+    ctk.set_appearance_mode(themeHandler.getThemePart("WPM"))
+    ctk.set_default_color_theme(themeHandler.getThemePart("DCT"))
+
+    deleteWindow.transient()
+    deleteWindow.after(10, deleteWindow.grab_set)
+    topLevelIcon(deleteWindow)
+
+    def proceedOperation():
+        try:
+            os.remove(filePath)
+            if reload_callback:
+                reload_callback()
+        except Exception as e:
+            messageBox("Error", f"Failed to delete file: {e}")
+        finally:
+            deleteWindow.destroy()
+
+    def cancelOperation():
+        deleteWindow.destroy()
+
+    container = ctk.CTkFrame(deleteWindow, fg_color=themeHandler.getThemePart("frame"))
+    container.pack(pady=10, padx=10, expand=True, fill="both")
+
+    label = ctk.CTkLabel(container, text=f"Are you sure you want to delete ''' {os.path.basename(filePath)} '''?", wraplength=380, text_color=themeHandler.getThemePart("text"))
+    label.pack(pady=10, padx=10, expand=True, fill="both")
+
+    buttonFrame = ctk.CTkFrame(container, fg_color="transparent")
+    buttonFrame.pack(pady=10, padx=10, fill="x")
+
+    yesButton = ctk.CTkButton(buttonFrame, text="Yes", command=proceedOperation)
+    yesButton.pack(side="left", expand=True, fill="x", padx=(0, 5))
+
+    noButton = ctk.CTkButton(buttonFrame, text="No", command=cancelOperation)
+    noButton.pack(side="right", expand=True, fill="x", padx=(5, 0))
+
+def rename(filePath, reload_callback):
+    renameWindow = ctk.CTkToplevel()
+    renameWindow.title("Noteted - Rename")
+    renameWindow.geometry("350x150")
+    renameWindow.resizable(False, False)
+
+    renameWindow.configure(fg_color=themeHandler.getThemePart("background"))
+    ctk.set_appearance_mode(themeHandler.getThemePart("WPM"))
+    ctk.set_default_color_theme(themeHandler.getThemePart("DCT"))
+
+    renameWindow.transient()
+    renameWindow.after(10, renameWindow.grab_set)
+    topLevelIcon(renameWindow)
+
+    def intializeRename():
+        newName = entry.get()
+        if newName:
+            try:
+                directory = os.path.dirname(filePath)
+                _, currentExt = os.path.splitext(filePath)
+                _, newExt = os.path.splitext(newName)
+
+                if not newExt:
+                    newName += currentExt
+                
+                newFilePath = os.path.join(directory, newName)
+
+                if os.path.exists(newFilePath):
+                    messageBox("Error", "File already exists!")
+                    return
+
+                os.rename(filePath, newFilePath)
+                if reload_callback:
+                    reload_callback()
+                renameWindow.destroy()
+            except Exception as e:
+                messageBox("Error", f"Failed to rename file: {e}")
+
+    def do_cancel():
+        renameWindow.destroy()
+
+    container = ctk.CTkFrame(renameWindow, fg_color=themeHandler.getThemePart("frame"))
+    container.pack(pady=10, padx=10, expand=True, fill="both")
+
+    label = ctk.CTkLabel(container, text="Enter new name:", text_color=themeHandler.getThemePart("text"))
+    label.pack(pady=(10,0), padx=10)
+
+    entry = ctk.CTkEntry(container)
+    entry.insert(0, os.path.basename(filePath))
+    entry.pack(pady=5, padx=10, fill="x")
+
+    buttonFrame = ctk.CTkFrame(container, fg_color="transparent")
+    buttonFrame.pack(pady=10, padx=10, fill="x")
+
+    renameButton = ctk.CTkButton(buttonFrame, text="Rename", command=intializeRename)
+    renameButton.pack(side="left", expand=True, fill="x", padx=(0, 5))
+
+    cancelButton = ctk.CTkButton(buttonFrame, text="Cancel", command=do_cancel)
+    cancelButton.pack(side="right", expand=True, fill="x", padx=(5, 0))
 
 def settings(root):
     settingsWindow = ctk.CTkToplevel()
@@ -81,13 +180,13 @@ def newFile(reloadCallback=None):
         filePath = os.path.join(notesDirectory, fileName) # type: ignore
 
         if os.path.exists(filePath):
-            print(f"File '{fileName}' already exists.")
+            print(f"File '''{fileName}''' already exists.")
             return
 
         try:
             with open(filePath, 'w') as f:
                 f.write("")
-            print(f"File '{fileName}' created successfully.")
+            print(f"File '''{fileName}''' created successfully.")
             if reloadCallback:
                 reloadCallback()
             newFileWindow.destroy()
@@ -181,3 +280,26 @@ def info():
     githubButton.pack(side="left", expand=True, fill="x", padx=10)
 
     infoWindow.protocol("WM_DELETE_WINDOW", infoWindow.destroy)
+
+def messageBox(title, message):
+    _messageBox = ctk.CTkToplevel()
+    _messageBox.title("Noteted - " + title)
+    _messageBox.geometry("300x75")
+    _messageBox.resizable(False, False)
+
+    _messageBox.configure(fg_color=themeHandler.getThemePart("background"))
+    ctk.set_appearance_mode(themeHandler.getThemePart("WPM"))
+    ctk.set_default_color_theme(themeHandler.getThemePart("DCT"))
+
+    _messageBox.transient()
+    _messageBox.after(10, _messageBox.grab_set)
+    topLevelIcon(_messageBox)
+    
+    messageBoxContainer = ctk.CTkFrame(_messageBox, fg_color=themeHandler.getThemePart("frame"))
+    messageBoxContainer.pack(pady=10, padx=10, expand=True, fill="both")
+
+    messageLabel = ctk.CTkLabel(messageBoxContainer, text=message, text_color=themeHandler.getThemePart("text"))
+    messageLabel.pack(pady=10, padx=10, fill="both")
+
+    _messageBox.protocol("WM_DELETE_WINDOW", _messageBox.destroy)
+    _messageBox.mainloop()

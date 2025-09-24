@@ -48,9 +48,6 @@ def initializeUI():
 
     writingBox2 = textbox(mainContentFrame)
 
-    rightClickSidebar = rightClickMenu.RightClickMenu(root)
-    sidebarFrame.bind("<Button-3>", rightClickSidebar.popup)
-
     previewContainer = markdownRenderer.previewbox(mainContentFrame)
     previewBox2 = previewContainer.label # type: ignore
     TDrenderFrame = createTDrender(mainContentFrame)
@@ -76,11 +73,13 @@ def initializeUI():
     def updatePreviewWrapper(event=None):
         markdownRenderer.updatePreview(writingBox2, previewBox2)
 
-    listFiles(sidebarFrame, writingBox2, previewContainer, TDrenderFrame, updatePreviewWrapper, openedFileButton, saver, rightClickSidebar.popup)
-    writingBox2.bind("<KeyRelease>", updatePreviewWrapper)
-
     def reloadCallback():
         reloadFileList(sidebarFrame, writingBox2, previewContainer, TDrenderFrame, updatePreviewWrapper, openedFileButton, saver, rightClickSidebar.popup)
+
+    rightClickSidebar = rightClickMenu.RightClickMenu(root, reloadCallback)
+
+    listFiles(sidebarFrame, writingBox2, previewContainer, TDrenderFrame, updatePreviewWrapper, openedFileButton, saver, rightClickSidebar.popup)
+    writingBox2.bind("<KeyRelease>", updatePreviewWrapper)
 
     bindKeybinds(root, reloadCallback, updatePreviewWrapper, saver)
 
@@ -99,9 +98,6 @@ def funcNewFileButton(reloadList):
     
 def funcInfoButton():
     NTDwindow.info()
-
-def funcDeleteButton():
-    NTDwindow.delete()
     
 # ===== other ui stuff =====
 # thanks gemini code assist! you're great :3
@@ -192,7 +188,7 @@ def listFiles(part, writingBox, previewContainer, TDrenderFrame, updatePreview, 
         if fileName.endswith((".md", ".td", ".txt")):
             filePath = os.path.join(notesDirectory, fileName) # type: ignore
             button = ctk.CTkButton(part, text=fileName, fg_color="transparent", hover_color=themeHandler.getThemePart("hover"), text_color=themeHandler.getThemePart("text"))
-            button.bind("<Button-3>", popupMenu)
+            button.bind("<Button-3>", lambda event, path=filePath: popupMenu(event, path))
 
             def loadFileContent(path=filePath, btn=button):
                 # Store the currently opened button before changing it
@@ -259,8 +255,6 @@ def bindKeybinds(widget, reloadList, updatePreview, saver):
     widget.bind("<Control-N>", lambda event: NTDwindow.newFile(reloadList))
     widget.bind("<Control-q>", lambda event: widget.destroy())
     widget.bind("<Control-Q>", lambda event: widget.destroy())
-    widget.bind("<Control-d>", lambda event: NTDwindow.delete())
-    widget.bind("<Control-D>", lambda event: NTDwindow.delete())
     widget.bind("<Control-r>", lambda event: reloadList())
     widget.bind("<Control-R>", lambda event: reloadList())
     widget.bind("<F5>", lambda event: updatePreview())
