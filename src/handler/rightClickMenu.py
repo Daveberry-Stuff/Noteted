@@ -1,6 +1,7 @@
 import customtkinter as ctk
 import src.handler.theme as themeHandler
 import src.main.NTDwindow as NTDwindow
+import sys
 
 # i fucking fucking fucking hate this code so much
 # i know there's probably a easier and better way
@@ -11,13 +12,20 @@ import src.main.NTDwindow as NTDwindow
 class RightClickMenu(ctk.CTkToplevel):
     def __init__(self, master, reload_callback, **kwargs):
         transparent_color = themeHandler.getThemePart("background")
-        super().__init__(master, fg_color=transparent_color, **kwargs)
+        if sys.platform == "win32":
+            super().__init__(master, fg_color=transparent_color, **kwargs)
+        else:
+            super().__init__(master, **kwargs)
 
-        self.overrideredirect(True)
-        self.attributes("-topmost", True)
-        self.attributes("-transparentcolor", transparent_color)
+        if sys.platform == "win32":
+            self.overrideredirect(True)
+            self.attributes("-topmost", True)
+            self.attributes("-transparentcolor", transparent_color)
 
-        self.frame = ctk.CTkFrame(self, corner_radius=5, fg_color=themeHandler.getThemePart("rightClick"))
+        if sys.platform == "win32":
+            self.frame = ctk.CTkFrame(self, fg_color=themeHandler.getThemePart("rightClick"))
+        else:
+            self.frame = ctk.CTkFrame(self, corner_radius=5, fg_color=themeHandler.getThemePart("rightClick"))
         self.frame.pack(expand=True, fill="both")
 
         self.addCommand(label="Delete", command=self.delete)
