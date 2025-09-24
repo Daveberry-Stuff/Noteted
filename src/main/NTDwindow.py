@@ -59,10 +59,10 @@ def delete(filePath, reload_callback):
     buttonFrame = ctk.CTkFrame(container, fg_color="transparent")
     buttonFrame.pack(pady=10, padx=10, fill="x")
 
-    yesButton = ctk.CTkButton(buttonFrame, text="Yes", command=proceedOperation)
+    yesButton = ctk.CTkButton(buttonFrame, text="Yes", command=proceedOperation, text_color=themeHandler.getThemePart("text"))
     yesButton.pack(side="left", expand=True, fill="x", padx=(0, 5))
 
-    noButton = ctk.CTkButton(buttonFrame, text="No", command=cancelOperation)
+    noButton = ctk.CTkButton(buttonFrame, text="No", command=cancelOperation, text_color=themeHandler.getThemePart("text"))
     noButton.pack(side="right", expand=True, fill="x", padx=(5, 0))
 
 def rename(filePath, reload_callback):
@@ -119,10 +119,10 @@ def rename(filePath, reload_callback):
     buttonFrame = ctk.CTkFrame(container, fg_color="transparent")
     buttonFrame.pack(pady=10, padx=10, fill="x")
 
-    renameButton = ctk.CTkButton(buttonFrame, text="Rename", command=intializeRename)
+    renameButton = ctk.CTkButton(buttonFrame, text="Rename", command=intializeRename, text_color=themeHandler.getThemePart("text"))
     renameButton.pack(side="left", expand=True, fill="x", padx=(0, 5))
 
-    cancelButton = ctk.CTkButton(buttonFrame, text="Cancel", command=do_cancel)
+    cancelButton = ctk.CTkButton(buttonFrame, text="Cancel", command=do_cancel, text_color=themeHandler.getThemePart("text"))
     cancelButton.pack(side="right", expand=True, fill="x", padx=(5, 0))
 
 def settings(root):

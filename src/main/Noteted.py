@@ -118,6 +118,7 @@ def topbar(root):
 
     return topbar
 
+# hey don't worry, i'm gonna organize everything w/ arrays whenever i have the motivation to do so lmao
 def buttons(frame, reloadList, root):
     # icon buttons with text fallback meow :3
     iconSize = (20, 20)
@@ -129,7 +130,7 @@ def buttons(frame, reloadList, root):
     # options
     optionsIconPath = pathHandler.iconsPath("buttons", "tool.png")
     if os.path.exists(optionsIconPath): # type: ignore
-        optionsIcon = ctk.CTkImage(recolorImage(optionsIconPath, color="#FFFFFF"), size=iconSize) # type: ignore
+        optionsIcon = ctk.CTkImage(recolorImage(optionsIconPath, color=themeHandler.getThemePart("button")), size=iconSize) # type: ignore
         optionsButton = ctk.CTkButton(buttonFrame, image=optionsIcon, text="", command=lambda: funcOptionsButton(root), width=buttonSize, height=buttonSize)
     else:
         optionsButton = ctk.CTkButton(buttonFrame, text="Options", command=lambda: funcOptionsButton(root), width=85, text_color=themeHandler.getThemePart("text")) # type: ignore
@@ -138,7 +139,7 @@ def buttons(frame, reloadList, root):
     # new file
     newFileIconPath = pathHandler.iconsPath("buttons", "file-plus.png")
     if os.path.exists(newFileIconPath): # type: ignore
-        newFileIcon = ctk.CTkImage(recolorImage(newFileIconPath, color="#FFFFFF"), size=iconSize) # type: ignore
+        newFileIcon = ctk.CTkImage(recolorImage(newFileIconPath, color=themeHandler.getThemePart("button")), size=iconSize) # type: ignore
         newFileButton = ctk.CTkButton(buttonFrame, image=newFileIcon, text="", command=lambda: funcNewFileButton(reloadList), width=buttonSize, height=buttonSize)
     else:
         newFileButton = ctk.CTkButton(buttonFrame, text="New File", command=funcNewFileButton, width=85, text_color=themeHandler.getThemePart("text")) # type: ignore
@@ -147,7 +148,7 @@ def buttons(frame, reloadList, root):
     # info
     infoIconPath = pathHandler.iconsPath("buttons", "info.png")
     if os.path.exists(infoIconPath): # type: ignore
-        infoIcon = ctk.CTkImage(recolorImage(infoIconPath, color="#FFFFFF"), size=iconSize) # type: ignore
+        infoIcon = ctk.CTkImage(recolorImage(infoIconPath, color=themeHandler.getThemePart("button")), size=iconSize) # type: ignore
         iconButton = ctk.CTkButton(buttonFrame, image=infoIcon, text="", command=funcInfoButton, width=buttonSize, height=buttonSize)
     else:
         iconButton = ctk.CTkButton(buttonFrame, text="Info", command=funcInfoButton, width=85, text_color=themeHandler.getThemePart("text"))
