@@ -237,6 +237,8 @@ def info():
 
     def redirectGithub():
         webbrowser.open_new_tab("https://github.com/daveberrys/Noteted")
+    def redirectWebsite():
+        webbrowser.open_new_tab("https://noteted.netlify.app/")
 
     container = ctk.CTkFrame(infoWindow, fg_color=themeHandler.getThemePart("frame"))
     container.pack(pady=10, padx=10, expand=True, fill="both")
@@ -252,6 +254,7 @@ def info():
         imageLabel.pack(pady=10)
 
     # --- Text ---
+    versionContent = ""
     versionPath = os.path.join(pathHandler.mainPath(), 'gitver.txt')
     if os.path.exists(versionPath):
         with open(versionPath, 'r') as f:
@@ -260,7 +263,7 @@ def info():
     titleText = ctk.CTkLabel(container, text="Noteted", font=ctk.CTkFont(size=24, weight="bold"))
     infoText = ctk.CTkLabel(container, text="A simple, free and open source note taking app.", wraplength=340)
     maintainerText = ctk.CTkLabel(container, text="Maintained by Daveberry Blueson.", wraplength=340)
-    versionText = ctk.CTkLabel(container, text=versionContent, wraplength=340) # type: ignore
+    versionText = ctk.CTkLabel(container, text=versionContent, wraplength=340)
     
     titleText.pack(pady=(0, 10))
     infoText.pack()
@@ -277,7 +280,10 @@ def info():
     buttonContainer.pack(pady=10, padx=10, expand=True, fill="x")
 
     githubButton = ctk.CTkButton(buttonContainer, text="Github", command=redirectGithub)
-    githubButton.pack(side="left", expand=True, fill="x", padx=10)
+    githubButton.pack(side="left", expand=True, fill="x", padx=(10, 5))
+
+    websiteButton = ctk.CTkButton(buttonContainer, text="Website", command=redirectWebsite)
+    websiteButton.pack(side="left", expand=True, fill="x", padx=(5, 10))
 
     infoWindow.protocol("WM_DELETE_WINDOW", infoWindow.destroy)
 

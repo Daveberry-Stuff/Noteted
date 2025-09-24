@@ -12,7 +12,7 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[('assets', 'assets')],
+    datas=[('assets', 'assets'), ('gitver.txt', '.')],
     hiddenimports=['pypresence', 'tkhtmlview', 'PIL._tkinter_finder'],
     hookspath=['hooks'],
     hooksconfig={},
