@@ -244,8 +244,15 @@ def dcRPC(root, saver):
     
 # ===== cool funny keybinds =====
 def bindKeybinds(widget, reloadList, updatePreview, saver):
-    widget.bind("<Control-s>", lambda event: saver.save())
-    widget.bind("<Control-S>", lambda event: saver.save())
+    for fileName in os.listdir():
+        if fileName.endswith((".td")):
+            insideAtodoList = True
+    else:
+        insideAtodoList = False
+
+    if insideAtodoList:
+        widget.bind("<Control-s>", lambda event: saver.save())
+        widget.bind("<Control-S>", lambda event: saver.save())
     widget.bind("<Control-n>", lambda event: NTDwindow.newFile(reloadList))
     widget.bind("<Control-N>", lambda event: NTDwindow.newFile(reloadList))
     widget.bind("<Control-q>", lambda event: widget.destroy())

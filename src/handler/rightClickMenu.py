@@ -17,12 +17,11 @@ class RightClickMenu(ctk.CTkToplevel):
         else:
             super().__init__(master, **kwargs)
 
+        self.overrideredirect(True)
+        self.attributes("-topmost", True)
+        
         if sys.platform == "win32":
-            self.overrideredirect(True)
-            self.attributes("-topmost", True)
             self.attributes("-transparentcolor", transparent_color)
-
-        if sys.platform == "win32":
             self.frame = ctk.CTkFrame(self, fg_color=themeHandler.getThemePart("rightClick"))
         else:
             self.frame = ctk.CTkFrame(self, corner_radius=5, fg_color=themeHandler.getThemePart("rightClick"))
