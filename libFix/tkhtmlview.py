@@ -16,13 +16,13 @@ def patchTKhtmlView():
             parentPath = os.path.abspath(os.path.join(__file__, '..', '..'))
             parserPath = os.path.join(os.path.join(parentPath), "venv", "lib", f"python{major}.{minor}", "site-packages", "tkhtmlview",  "html_parser.py")
 
-        with open(parserPath, "r", encoding="utf-8") as f:
+        with open(str(parserPath), "r", encoding="utf-8") as f:
             content = f.read()
 
         if hasattr(Image, 'Resampling') and "Image.ANTIALIAS" in content:
-            new_content = content.replace("Image.ANTIALIAS", "Image.Resampling.LANCZOS")
-            with open(parserPath, "w", encoding="utf-8") as f:
-                f.write(new_content)
+            newContent = content.replace("Image.ANTIALIAS", "Image.Resampling.LANCZOS")
+            with open(str(parserPath), "w", encoding="utf-8") as f:
+                f.write(newContent)
             print("successfully patched tkhtmlview for pillow 10+.")
         elif "Image.ANTIALIAS" not in content:
             print("tkhtmlview appears to be already patched or doesn't need patching.")
