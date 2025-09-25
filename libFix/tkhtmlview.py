@@ -32,4 +32,5 @@ def patchTKhtmlView():
     except Exception as e:
         print(f"Error patching tkhtmlview: {e}", file=sys.stderr)
 
-patchTKhtmlView()
+if __name__ == "__main__":
+    patchTKhtmlView()

@@ -1,6 +1,5 @@
 import sys
 import os
-
 import src.main.Noteted as Noteted
 import src.main.firstTimeUse as firstTimeUse
 import src.backend.settings as settings
