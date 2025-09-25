@@ -16,7 +16,7 @@ def patchTKhtmlView():
         if sys.platform == "win32":
             parserPath = f"C:\\hostedtoolcache\\windows\\python\\{major}.{minor}.{micro}\\x64\\lib\\site-packages\\tkhtmlview\\html_parser.py"
         elif sys.platform == "linux":
-            parserPath = f"/usr/lib/python{major}.{minor}/tkhtmlview/html_parser.py", 
+            parserPath = f"/usr/lib/python{major}.{minor}/tkhtmlview/html_parser.py"
         elif sys.platform == "darwin":
             parserPath = f"/Library/Frameworks/Python.framework/Versions/{major}.{minor}/lib/python{major}.{minor}/site-packages/tkhtmlview/html_parser.py"
 

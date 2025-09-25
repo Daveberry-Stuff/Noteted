@@ -1,0 +1,9 @@
+name: Question
+description: Tell us about something you wanted to ask.
+labels: [question]
+body:
+  - type: textarea
+    attributes:
+      label: What's up in your mind that you wanna ask us?
+    validations:
+      required: true

@@ -1,0 +1,38 @@
+name: Noteted Bug Report
+description: Report bugs about the app itself.
+labels: [bug]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: "Tell us your issue with the app."
+    validations:
+      required: true
+
+  - type: textarea
+    id: recreation
+    attributes:
+      label: "How would we recreate this issue? And, send a video recording if possible. (reccomended use catbox.moe to upload!)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: version
+    attributes:
+      label: "Are you using the compiled version or the source version?"
+      options:
+        - Compiled
+        - Source
+    validations:
+      required: true
+
+  - type: dropdown
+    id: OStarget
+    attributes:
+      label: "What's your operating system?"
+      options:
+        - "Windows"
+        - "Linux"
+        - "Mac"
+    validations:
+      required: true
