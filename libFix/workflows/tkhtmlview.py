@@ -2,19 +2,23 @@ import os
 import sys
 from PIL import Image
 
-# fuck you fuck you fuck y-
-# thank you pillow and tkhtmlvi-
+# !==================================================!
+#                  MAJOR WARNING!!!!
+#      This file is SPECIFICALLY FOR WORKFLOWS!!!
+#        I don't reccomend you to run this file.
+# !==================================================!
+
 def patchTKhtmlView():
     major = sys.version_info.major
     minor = sys.version_info.minor
     micro = sys.version_info.micro
     try:
         if sys.platform == "win32":
-            parentPath = os.path.abspath(os.path.join(__file__, '..', '..'))
-            parserPath = os.path.join(os.path.join(parentPath), "venv", "Lib", "site-packages", "tkhtmlview",  "html_parser.py")
-        elif sys.platform == "linux" and sys.platform == "darwin":
-            parentPath = os.path.abspath(os.path.join(__file__, '..', '..'))
-            parserPath = os.path.join(os.path.join(parentPath), "venv", "lib", f"python{major}.{minor}", "site-packages", "tkhtmlview",  "html_parser.py")
+            parserPath = f"C:\\hostedtoolcache\\windows\\python\\{major}.{minor}.{micro}\\x64\\lib\\site-packages\\tkhtmlview\\html_parser.py"
+        elif sys.platform == "linux":
+            parserPath = f"/usr/lib/python{major}.{minor}/tkhtmlview/html_parser.py", 
+        elif sys.platform == "darwin":
+            parserPath = f"/Library/Frameworks/Python.framework/Versions/{major}.{minor}/lib/python{major}.{minor}/site-packages"
 
         with open(parserPath, "r", encoding="utf-8") as f:
             content = f.read()
