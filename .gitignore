@@ -1,15 +1,2 @@
-# python caching
-src/__pycache__
-src/main/__pycache__
-src/backend/__pycache__
-src/handler/__pycache__
-src/renderers/__pycache__
-hooks/__pycache__
-libFix/__pycache__
-*.pyc
-
-# other stupid stuff
 venv
-.DS_Store
-dist
-build
+*.pyc

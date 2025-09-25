@@ -1,4 +1,4 @@
-customtkinter
+pyside6
 pypresence
 Pillow
 markdown2

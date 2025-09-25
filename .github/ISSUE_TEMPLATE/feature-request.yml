@@ -1,9 +1,0 @@
-name: Feature Request
-description: Tell us what you were cookin, mate!
-labels: [enhancement]
-body:
-  - type: textarea
-    attributes:
-      label: What kind of feature were you cooking a few minutes ago that you want to be added in the app?
-    validations:
-      required: true
