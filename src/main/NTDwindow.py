@@ -236,7 +236,7 @@ def info():
     topLevelIcon(infoWindow)
 
     def redirectGithub():
-        webbrowser.open_new_tab("https://github.com/daveberrys/Noteted")
+        webbrowser.open_new_tab("https://github.com/Daveberry-Stuff/Noteted")
     def redirectWebsite():
         webbrowser.open_new_tab("https://noteted.netlify.app/")
 
