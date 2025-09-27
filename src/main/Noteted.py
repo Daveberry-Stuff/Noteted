@@ -247,7 +247,7 @@ def listFiles(part, writingBox, previewContainer, TDrenderFrame, updatePreview, 
                     buttonSize = 30
                 
                     # -- Refresh Button --
-                    refreshButtonPath = "assets/icons/buttons/refresh-ccw.png"
+                    refreshButtonPath = str(pathHandler.iconsPath("buttons", "refresh-ccw.png"))
                     if os.path.exists(refreshButtonPath):
                         recoloredIcon = recolorImage(refreshButtonPath, color=themeHandler.getThemePart("button"))
                         if recoloredIcon:

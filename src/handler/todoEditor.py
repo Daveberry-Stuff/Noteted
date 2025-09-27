@@ -1,9 +1,10 @@
-import tkinter as tk
 import os
+import tkinter as tk
+import customtkinter as ctk
 import src.renderers.todo as tdRenderer
 import src.main.Noteted as Noteted
-import customtkinter as ctk
 import src.handler.theme as themeHandler
+import src.handler.path as pathHandler
 
 def refreshAll(textEditor, tdRenderFrame, filePath, Noteted):
     content = textEditor.get("1.0", "end-1c")
@@ -31,7 +32,7 @@ def refreshAll(textEditor, tdRenderFrame, filePath, Noteted):
     buttonSize = 30
 
     # -- Refresh Button --
-    refreshButtonPath = "assets/icons/buttons/refresh-ccw.png"
+    refreshButtonPath = str(pathHandler.iconsPath("buttons", "refresh-ccw.png"))
     if os.path.exists(refreshButtonPath):
         recoloredIcon = Noteted.recolorImage(refreshButtonPath, color=themeHandler.getThemePart("button"))
         if recoloredIcon:
