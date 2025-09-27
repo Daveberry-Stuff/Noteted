@@ -121,41 +121,44 @@ def topbar(root):
 
 # hey don't worry, i'm gonna organize everything w/ arrays whenever i have the motivation to do so lmao
 def buttons(frame, reloadList, root):
-    # icon buttons with text fallback meow :3
     iconSize = (20, 20)
     buttonSize = 30
     
     buttonFrame = ctk.CTkFrame(frame, fg_color="transparent")
     buttonFrame.pack(pady=10, padx=10, fill="x")
-
-    # options
-    optionsIconPath = pathHandler.iconsPath("buttons", "tool.png")
-    if os.path.exists(optionsIconPath): # type: ignore
-        optionsIcon = ctk.CTkImage(recolorImage(optionsIconPath, color=themeHandler.getThemePart("button")), size=iconSize) # type: ignore
-        optionsButton = ctk.CTkButton(buttonFrame, image=optionsIcon, text="", command=lambda: funcOptionsButton(root), width=buttonSize, height=buttonSize)
-    else:
-        optionsButton = ctk.CTkButton(buttonFrame, text="Options", command=lambda: funcOptionsButton(root), width=85, text_color=themeHandler.getThemePart("text")) # type: ignore
-    optionsButton.pack(side="left", expand=False, padx=(20, 0))
-
-    # new file
-    newFileIconPath = pathHandler.iconsPath("buttons", "file-plus.png")
-    if os.path.exists(newFileIconPath): # type: ignore
-        newFileIcon = ctk.CTkImage(recolorImage(newFileIconPath, color=themeHandler.getThemePart("button")), size=iconSize) # type: ignore
-        newFileButton = ctk.CTkButton(buttonFrame, image=newFileIcon, text="", command=lambda: funcNewFileButton(reloadList), width=buttonSize, height=buttonSize)
-    else:
-        newFileButton = ctk.CTkButton(buttonFrame, text="New File", command=funcNewFileButton, width=85, text_color=themeHandler.getThemePart("text")) # type: ignore
-    newFileButton.pack(side="left", expand=False, padx=(20, 0))
     
-    # info
-    infoIconPath = pathHandler.iconsPath("buttons", "info.png")
-    if os.path.exists(infoIconPath): # type: ignore
-        infoIcon = ctk.CTkImage(recolorImage(infoIconPath, color=themeHandler.getThemePart("button")), size=iconSize) # type: ignore
-        iconButton = ctk.CTkButton(buttonFrame, image=infoIcon, text="", command=funcInfoButton, width=buttonSize, height=buttonSize)
-    else:
-        iconButton = ctk.CTkButton(buttonFrame, text="Info", command=funcInfoButton, width=85, text_color=themeHandler.getThemePart("text"))
-    iconButton.pack(side="left", expand=False, padx=(20, 0))
+    initializeButtons = [
+        {
+            "iconPath": "tool",
+            "command": lambda: funcOptionsButton(root),
+            "text": "Options"
+        },
+        {
+            "iconPath": "file-plus",
+            "command": lambda: funcNewFileButton(reloadList),
+            "text": "New File"
+        },
+        {
+            "iconPath": "info",
+            "command": funcInfoButton,
+            "text": "Info"
+        }
+    ]
     
-    return buttons
+    for button_info in initializeButtons:
+        buttonIcon = button_info["iconPath"]
+        buttonCommand = button_info["command"]
+        buttonText = button_info["text"]
+    
+        _iconPath = pathHandler.iconsPath("buttons", buttonIcon + ".png")
+        if os.path.exists(_iconPath): # type: ignore
+            _buttonIcon = ctk.CTkImage(recolorImage(_iconPath, color=themeHandler.getThemePart("button")), size=iconSize) # type: ignore
+            _button = ctk.CTkButton(buttonFrame, image=_buttonIcon, text="", command=buttonCommand, width=buttonSize, height=buttonSize)
+        else:
+            _button = ctk.CTkButton(buttonFrame, text=buttonText, command=buttonCommand, width=85, text_color=themeHandler.getThemePart("text"))
+        _button.pack(side="left", expand=False, padx=(20, 0))
+        
+    
 
 def sidebar(root):
     sidebar = ctk.CTkScrollableFrame(root, width=200, corner_radius=10,
@@ -238,30 +241,8 @@ def listFiles(part, writingBox, previewContainer, TDrenderFrame, updatePreview, 
                     TDrenderFrame.pack(pady=0, padx=(0, 10), expand=True, fill="both", side="top")
                     
                     renderer.tkraise()
-                    
-                    # -- Frame for Raw File Editor Buttons --
-                    textEditorButtons = ctk.CTkFrame(textEditorFrame, fg_color=themeHandler.getThemePart("frame"))
-                    textEditorButtons.pack(fill="both", padx=0, pady=(10, 0), side="right")
-                    
-                    iconSize = (20, 20)
-                    buttonSize = 30
-                
-                    # -- Refresh Button --
-                    refreshButtonPath = str(pathHandler.iconsPath("buttons", "refresh-ccw.png"))
-                    if os.path.exists(refreshButtonPath):
-                        recoloredIcon = recolorImage(refreshButtonPath, color=themeHandler.getThemePart("button"))
-                        if recoloredIcon:
-                            refreshIcon = ctk.CTkImage(recoloredIcon, size=iconSize)
-                            refreshContent = ctk.CTkButton(textEditorButtons, image=refreshIcon, text="", command=lambda: todoEditorHandler.refreshAll(rawTextEditor, TDrenderFrame, path, sys.modules[__name__]), width=buttonSize, height=buttonSize)
-                        else:
-                            # Fallback if image fails to load
-                            refreshContent = ctk.CTkButton(textEditorButtons, text="R", command=lambda: todoEditorHandler.refreshAll(rawTextEditor, TDrenderFrame, path, sys.modules[__name__]), width=buttonSize, height=buttonSize, text_color=themeHandler.getThemePart("text"))
-                    else:
-                        refreshContent = ctk.CTkButton(textEditorButtons, text="R", command=lambda: todoEditorHandler.refreshAll(rawTextEditor, TDrenderFrame, path, sys.modules[__name__]), width=buttonSize, height=buttonSize, text_color=themeHandler.getThemePart("text"))
-                    
-                    refreshContent.pack(expand=True, fill="y", pady=10, padx=10)
-                    
                     todoEditorHandler.refreshAll(rawTextEditor, TDrenderFrame, path, sys.modules[__name__])
+                    # ^ full ui initialization!
                 
             button.configure(command=loadFileContent)
             button.pack(pady=5, padx=10, fill="x")
@@ -295,7 +276,6 @@ def bindKeybinds(widget, reloadList, updatePreview, saver, filePath=None):
     widget.bind("<Control-Q>", lambda event: widget.destroy())
     widget.bind("<Control-r>", lambda event: reloadList())
     widget.bind("<Control-R>", lambda event: reloadList())
-    widget.bind("<F5>", lambda event: updatePreview())
 
 # ===== refresh ui for theme! =====
 def refreshUI(root):
