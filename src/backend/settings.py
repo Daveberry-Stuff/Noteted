@@ -86,6 +86,12 @@ def getSettingsDef(currentSettings):
             "type": "bool",
             "default": True,
             "key": "EnableAutoSaving"
+        },
+        {
+            "name": "Check for updates",
+            "type": "bool",
+            "default": True,
+            "key": "CheckForUpdate"
         }
     ])
 

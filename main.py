@@ -1,6 +1,5 @@
 # ===================================================================================
 #             This script includs the launching and checking for updates
-#                 Also includes checking if you have tkhtmlview patch.
 # ===================================================================================
 
 import sys
@@ -10,11 +9,33 @@ import requests
 import src.main.Noteted as Noteted
 import src.main.firstTimeUse as firstTimeUse
 import src.backend.settings as settings
+import src.backend.getFromJSON as getJson
 
 import customtkinter as ctk
 import src.handler.theme as themeHandler
 import src.handler.path as pathHandler
 import webbrowser
+
+def fetchUserVer():
+    versionPath = os.path.join('gitver.txt')
+    if os.path.exists(versionPath):
+        with open(versionPath, 'r') as f:
+            versionText = f.read().strip()
+            return versionText
+
+def fetchLatestGitVer():
+    response = requests.get("https://raw.githubusercontent.com/Daveberry-Stuff/Noteted/main/gitver.txt")
+    response.raise_for_status()
+    return response.text
+
+def startNoteted():
+    print("User's version is up to date.")
+    if not os.path.exists(settings.settingsFile):
+        print("First time use detected, running setup...")
+        firstTimeUse.initializeFirstTimeUI()
+    else:
+        print("Starting up...")
+        Noteted.initializeUI()
 
 def initializeWindowUpdate():
     def topLevelIcon(toplevel_window):
@@ -31,20 +52,18 @@ def initializeWindowUpdate():
 
     def continueAnyways():
         notificationUpdate.destroy()
-        if not os.path.exists(settings.settingsFile):
-            print("First time use detected, running setup...")
-            firstTimeUse.initializeFirstTimeUI()
-        else:
-            Noteted.initializeUI()
+        startNoteted()
     
     def latestRelese():
-        notificationUpdate.destroy()
         webbrowser.open_new_tab("https://github.com/Daveberry-Stuff/Noteted/releases/latest")
         continueAnyways()
+
+    latestGitVer = fetchLatestGitVer()
+    userVersion = fetchUserVer()
     
     notificationUpdate = ctk.CTk()
     notificationUpdate.title("Noteted - Update Available")
-    notificationUpdate.geometry("500x175")
+    notificationUpdate.geometry("500x185")
     notificationUpdate.resizable(False, False)
 
     notificationUpdate.configure(fg_color=themeHandler.getThemePart("background"))
@@ -59,48 +78,37 @@ def initializeWindowUpdate():
     notificationContainer.pack(pady=10, padx=10, expand=True, fill="both")
 
     messageLabel = ctk.CTkLabel(notificationContainer, text="Heya, your noteted has an update!", text_color=themeHandler.getThemePart("text"), font=("Arial", 20, "bold"))
-    messageLabel.pack(pady=10, padx=10, fill="both")
+    messageLabel.pack(pady=(10, 0), padx=10, fill="both")
 
+    messageLabel = ctk.CTkLabel(notificationContainer, text=str(userVersion) + " is not the same as " + str(latestGitVer) + "!", text_color=themeHandler.getThemePart("text"), font=("Arial", 14))
+    messageLabel.pack(pady=0, padx=10, fill="both")
+    
     messageLabel = ctk.CTkLabel(notificationContainer, text="This is a reccomended thing to do, so please update Noteted regularly!", text_color=themeHandler.getThemePart("text"), font=("Arial", 14))
-    messageLabel.pack(pady=10, padx=10, fill="both")
+    messageLabel.pack(pady=0, padx=10, fill="both")
 
     updateButtonLabel = ctk.CTkButton(notificationContainer, text="Latest Release", command=latestRelese, text_color=themeHandler.getThemePart("text"))
-    updateButtonLabel.pack(side="left", pady=10, padx=(10, 5), fill="x", expand=True)
+    updateButtonLabel.pack(side="left", pady=(2, 10), padx=(10, 5), fill="x", expand=True)
 
     continueButtonLabel = ctk.CTkButton(notificationContainer, text="Continue Anyways", command=continueAnyways, text_color=themeHandler.getThemePart("text"))
-    continueButtonLabel.pack(side="right", pady=10, padx=(5, 10), fill="x", expand=True)
+    continueButtonLabel.pack(side="right", pady=(2, 10), padx=(5, 10), fill="x", expand=True)
 
     notificationUpdate.protocol("WM_DELETE_WINDOW", notificationUpdate.destroy)
     notificationUpdate.mainloop()
 
 if __name__ == "__main__":
-    def fetchUserVer():
-        versionPath = os.path.join('gitver.txt')
-        if os.path.exists(versionPath):
-            with open(versionPath, 'r') as f:
-                versionText = f.read().strip()
-                return versionText
-
-    def fetchLatestGitVer():
-        response = requests.get("https://raw.githubusercontent.com/Daveberry-Stuff/Noteted/main/gitver.txt")
-        response.raise_for_status()
-        return response.text
-
-    latestGitVer = fetchLatestGitVer()
-    userVersion = fetchUserVer()
-
-    print("Github latest release:", latestGitVer)
-    print("User is using version:", userVersion)
-    print("Is user's version the same as github?", userVersion == latestGitVer)
-
-    if userVersion != latestGitVer:
-        print("User's version is outdated or it's the wrong version!")
-        initializeWindowUpdate()
-    else:
-        print("User's version is up to date.")
-        if not os.path.exists(settings.settingsFile):
-            print("First time use detected, running setup...")
-            firstTimeUse.initializeFirstTimeUI()
+    if getJson.getSetting("CheckForUpdate"):
+        latestGitVer = fetchLatestGitVer()
+        userVersion = fetchUserVer()
+    
+        print("Github latest release:", latestGitVer)
+        print("User is using version:", userVersion)
+        print("Is user's version the same as github?", userVersion == latestGitVer)
+    
+        if userVersion != latestGitVer:
+            print("User's version is outdated or it's the wrong version!")
+            initializeWindowUpdate()
         else:
-            print("Starting up...")
-            Noteted.initializeUI()
+            print("User's version is up to date.")
+            startNoteted()
+    else:
+        startNoteted()
