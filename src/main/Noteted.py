@@ -221,9 +221,33 @@ def listFiles(part, writingBox, previewContainer, TDrenderFrame, updatePreview, 
                     for widget in TDrenderFrame.winfo_children():
                         widget.destroy()
 
+                    # -- Frame for Todo Renderer --
                     renderer = tdRenderer.TodoRenderer(TDrenderFrame, content, path)
                     renderer.pack(expand=True, fill="both")
-                    TDrenderFrame.pack(pady=0, padx=(0, 10), expand=True, fill="both", side="left")
+                    TDrenderFrame.pack(pady=0, padx=(0, 10), expand=True, fill="both", side="top")
+                    
+                    # -- Frame for Raw File Editor --
+                    textEditorFrame = ctk.CTkFrame(TDrenderFrame, fg_color="transparent")
+                    textEditorFrame.pack(fill="both", padx=0, pady=0, side="bottom")
+                    
+                    rawTextEditor = ctk.CTkTextbox(textEditorFrame, fg_color=themeHandler.getThemePart("frame"))
+                    rawTextEditor.pack(fill="both", padx=(0, 10), pady=(10, 0), side="left", expand=True)
+                    rawTextEditor.insert("1.0", content)
+                    
+                    textEditorButtons = ctk.CTkFrame(textEditorFrame, fg_color=themeHandler.getThemePart("frame"))
+                    textEditorButtons.pack(fill="both", padx=0, pady=(10, 0), side="right")
+                    
+                    # -- Frame for Raw File Editor Buttons --
+                    iconSize = (20, 20)
+                    buttonSize = 30
+                    
+                    refreshButtonPath = "assets/icons/buttons/refresh-ccw.png"
+                    if os.path.exists(refreshButtonPath): # type: ignore
+                        infoIcon = ctk.CTkImage(recolorImage(refreshButtonPath, color=themeHandler.getThemePart("button")), size=iconSize) # type: ignore
+                        refreshContent = ctk.CTkButton(textEditorButtons, image=infoIcon, text="", command=print("Refresh"), width=buttonSize, height=buttonSize)
+                    else:
+                        refreshContent = ctk.CTkButton(textEditorButtons, text="R", command=print("Refresh"), width=85, text_color=themeHandler.getThemePart("text"))
+                    refreshContent.pack(side="top", expand=False, pady=10, padx=10)
                 
             button.configure(command=loadFileContent)
             button.pack(pady=5, padx=10, fill="x")

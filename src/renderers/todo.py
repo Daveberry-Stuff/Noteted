@@ -1,5 +1,7 @@
 import customtkinter as ctk
 import tkinter as tk
+import os
+import src.backend.getFromJSON as getJson
 import re
 import src.handler.theme as themeHandler
 
@@ -12,6 +14,7 @@ class TodoRenderer(ctk.CTkScrollableFrame):
         self.render()
 
     def render(self):
+        # -- Frame for Rendered Todo --
         if self.contentFrame:
             self.contentFrame.destroy()
         
@@ -20,7 +23,7 @@ class TodoRenderer(ctk.CTkScrollableFrame):
 
         self.boardFrames = {}
         currentBoardFrame = self.contentFrame
-
+        
         defaultBoardFrame = ctk.CTkFrame(self.contentFrame, fg_color="transparent")
         defaultBoardFrame.pack(fill="x", padx=10)
         currentBoardFrame = defaultBoardFrame
@@ -94,7 +97,7 @@ class TodoRenderer(ctk.CTkScrollableFrame):
         addTodoButton.pack(side="left")
 
         addBoardButton = ctk.CTkButton(buttonFrame, text="[#]", width=30, command=self.addBoard, fg_color="transparent", text_color="gray", hover_color="#555555")
-        addBoardButton.pack(side="left", padx=5)
+        addBoardButton.pack(side="left", padx=(5, 0))
 
     def startRename(self, event, lineIndex, labelWidget, itemType):
         labelWidget.pack_forget()

@@ -4,9 +4,9 @@
 name: Noteted App Builder
 on:
     push:
-        branches: [main, dev]
+        branches: [main]
     pull_request:
-        branches: [main, dev]
+        branches: [main]
 
 env:
     pythonVersion: 3.12
