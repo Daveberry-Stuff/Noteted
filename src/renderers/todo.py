@@ -6,11 +6,12 @@ import re
 import src.handler.theme as themeHandler
 
 class TodoRenderer(ctk.CTkScrollableFrame):
-    def __init__(self, parent, fileContent, filePath):
+    def __init__(self, parent, fileContent, filePath, rawTextEditor=None):
         super().__init__(parent, fg_color=themeHandler.getThemePart("frame"))
         self.filePath = filePath
         self.lines = fileContent.split('\n')
         self.contentFrame = None
+        self.rawTextEditor = rawTextEditor
         self.render()
 
     def render(self):
@@ -217,5 +218,10 @@ class TodoRenderer(ctk.CTkScrollableFrame):
         self.render()
 
     def saveChanges(self):
+        newContent = '\n'.join(self.lines)
         with open(self.filePath, "w", encoding='utf-8') as f:
-            f.write('\n'.join(self.lines))
+            f.write(newContent)
+        
+        if self.rawTextEditor:
+            self.rawTextEditor.delete("1.0", tk.END)
+            self.rawTextEditor.insert("1.0", newContent)

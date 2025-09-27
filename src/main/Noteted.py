@@ -15,6 +15,7 @@ import src.handler.path as pathHandler
 import src.handler.saving as savingHandler
 import src.handler.theme as themeHandler
 import src.handler.rightClickMenu as rightClickMenu
+import src.handler.todoEditor as todoEditorHandler
 
 # ===== guess by the definition =====
 def initializeUI():
@@ -81,7 +82,7 @@ def initializeUI():
     listFiles(sidebarFrame, writingBox2, previewContainer, TDrenderFrame, updatePreviewWrapper, openedFileButton, saver, rightClickSidebar.popup)
     writingBox2.bind("<KeyRelease>", updatePreviewWrapper)
 
-    bindKeybinds(root, reloadCallback, updatePreviewWrapper, saver)
+    bindKeybinds(root, reloadCallback, updatePreviewWrapper, saver, None)
 
     buttons(topbarFrame, reloadCallback, root)
     root.mainloop()    
@@ -200,6 +201,8 @@ def listFiles(part, writingBox, previewContainer, TDrenderFrame, updatePreview, 
                 if previousOpenedButton and previousOpenedButton.winfo_exists():
                     previousOpenedButton.configure(fg_color="transparent")
 
+                bindKeybinds(writingBox.master.master, lambda: reloadFileList(part, writingBox, previewContainer, TDrenderFrame, updatePreview, openedFileButton, saver, popupMenu), lambda: markdownRenderer.updatePreview(writingBox, previewContainer.label), saver, path)
+
                 with open(path, "r", encoding='utf-8') as file:
                     content = file.read()
                 
@@ -215,17 +218,12 @@ def listFiles(part, writingBox, previewContainer, TDrenderFrame, updatePreview, 
                 if path.endswith(".md"):
                     markdownRenderer.renderMarkdown(writingBox, previewContainer, updatePreview)
                 elif path.endswith(".txt"):
-                    textRenderer.render_text(writingBox)
+                    textRenderer.renderText(writingBox)
                 elif path.endswith(".td"):
                     saver.stop()
                     for widget in TDrenderFrame.winfo_children():
                         widget.destroy()
 
-                    # -- Frame for Todo Renderer --
-                    renderer = tdRenderer.TodoRenderer(TDrenderFrame, content, path)
-                    renderer.pack(expand=True, fill="both")
-                    TDrenderFrame.pack(pady=0, padx=(0, 10), expand=True, fill="both", side="top")
-                    
                     # -- Frame for Raw File Editor --
                     textEditorFrame = ctk.CTkFrame(TDrenderFrame, fg_color="transparent")
                     textEditorFrame.pack(fill="both", padx=0, pady=0, side="bottom")
@@ -234,20 +232,36 @@ def listFiles(part, writingBox, previewContainer, TDrenderFrame, updatePreview, 
                     rawTextEditor.pack(fill="both", padx=(0, 10), pady=(10, 0), side="left", expand=True)
                     rawTextEditor.insert("1.0", content)
                     
+                    # -- Frame for Todo Renderer --
+                    renderer = tdRenderer.TodoRenderer(TDrenderFrame, content, path)
+                    renderer.pack(expand=True, fill="both")
+                    TDrenderFrame.pack(pady=0, padx=(0, 10), expand=True, fill="both", side="top")
+                    
+                    renderer.tkraise()
+                    
+                    # -- Frame for Raw File Editor Buttons --
                     textEditorButtons = ctk.CTkFrame(textEditorFrame, fg_color=themeHandler.getThemePart("frame"))
                     textEditorButtons.pack(fill="both", padx=0, pady=(10, 0), side="right")
                     
-                    # -- Frame for Raw File Editor Buttons --
                     iconSize = (20, 20)
                     buttonSize = 30
-                    
+                
+                    # -- Refresh Button --
                     refreshButtonPath = "assets/icons/buttons/refresh-ccw.png"
-                    if os.path.exists(refreshButtonPath): # type: ignore
-                        infoIcon = ctk.CTkImage(recolorImage(refreshButtonPath, color=themeHandler.getThemePart("button")), size=iconSize) # type: ignore
-                        refreshContent = ctk.CTkButton(textEditorButtons, image=infoIcon, text="", command=print("Refresh"), width=buttonSize, height=buttonSize)
+                    if os.path.exists(refreshButtonPath):
+                        recoloredIcon = recolorImage(refreshButtonPath, color=themeHandler.getThemePart("button"))
+                        if recoloredIcon:
+                            refreshIcon = ctk.CTkImage(recoloredIcon, size=iconSize)
+                            refreshContent = ctk.CTkButton(textEditorButtons, image=refreshIcon, text="", command=lambda: todoEditorHandler.refreshAll(rawTextEditor, TDrenderFrame, path, sys.modules[__name__]), width=buttonSize, height=buttonSize)
+                        else:
+                            # Fallback if image fails to load
+                            refreshContent = ctk.CTkButton(textEditorButtons, text="R", command=lambda: todoEditorHandler.refreshAll(rawTextEditor, TDrenderFrame, path, sys.modules[__name__]), width=buttonSize, height=buttonSize, text_color=themeHandler.getThemePart("text"))
                     else:
-                        refreshContent = ctk.CTkButton(textEditorButtons, text="R", command=print("Refresh"), width=85, text_color=themeHandler.getThemePart("text"))
-                    refreshContent.pack(side="top", expand=False, pady=10, padx=10)
+                        refreshContent = ctk.CTkButton(textEditorButtons, text="R", command=lambda: todoEditorHandler.refreshAll(rawTextEditor, TDrenderFrame, path, sys.modules[__name__]), width=buttonSize, height=buttonSize, text_color=themeHandler.getThemePart("text"))
+                    
+                    refreshContent.pack(expand=True, fill="y", pady=10, padx=10)
+                    
+                    todoEditorHandler.refreshAll(rawTextEditor, TDrenderFrame, path, sys.modules[__name__])
                 
             button.configure(command=loadFileContent)
             button.pack(pady=5, padx=10, fill="x")
@@ -267,16 +281,14 @@ def dcRPC(root, saver):
     root.protocol("WM_DELETE_WINDOW", closing)
     
 # ===== cool funny keybinds =====
-def bindKeybinds(widget, reloadList, updatePreview, saver):
-    for fileName in os.listdir():
-        if fileName.endswith((".td")):
-            insideAtodoList = True
-    else:
-        insideAtodoList = False
+def bindKeybinds(widget, reloadList, updatePreview, saver, filePath=None):
+    widget.unbind("<Control-s>")
+    widget.unbind("<Control-S>")
 
-    if insideAtodoList:
+    if not filePath or not filePath.endswith(".td"):
         widget.bind("<Control-s>", lambda event: saver.save())
         widget.bind("<Control-S>", lambda event: saver.save())
+    
     widget.bind("<Control-n>", lambda event: NTDwindow.newFile(reloadList))
     widget.bind("<Control-N>", lambda event: NTDwindow.newFile(reloadList))
     widget.bind("<Control-q>", lambda event: widget.destroy())
