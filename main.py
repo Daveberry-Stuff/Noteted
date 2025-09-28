@@ -12,6 +12,7 @@ import src.backend.settings as settings
 import src.backend.getFromJSON as getJson
 
 import customtkinter as ctk
+import tkinter as tk
 import src.handler.theme as themeHandler
 import src.handler.path as pathHandler
 import webbrowser
