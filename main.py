@@ -10,6 +10,7 @@ import src.main.Noteted as Noteted
 import src.main.firstTimeUse as firstTimeUse
 import src.backend.settings as settings
 import src.backend.getFromJSON as getJson
+import src.handler.path as pathHandler
 
 import customtkinter as ctk
 import tkinter as tk
@@ -18,7 +19,7 @@ import src.handler.path as pathHandler
 import webbrowser
 
 def fetchUserVer():
-    versionPath = os.path.join('gitver.txt')
+    versionPath = os.path.join(pathHandler.mainPath(), 'gitver.txt')
     if os.path.exists(versionPath):
         with open(versionPath, 'r') as f:
             versionText = f.read().strip()
