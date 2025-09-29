@@ -69,7 +69,8 @@ class TodoRenderer(ctk.CTkScrollableFrame):
 
         # -- Checkbox -- 
         checkboxText = {' ': '[ ]', 'x': '[x]', '~': '[~]'}.get(status, '[ ]')
-        checkbox = ctk.CTkButton(todoFrame, text=checkboxText, width=30, fg_color="transparent", text_color="#3498DB", hover_color="#555555")
+        checkbox = ctk.CTkButton(todoFrame, text=checkboxText, width=30, fg_color="transparent", hover_color="#555555")
+        checkbox.configure(text_color=themeHandler.getThemePart("secondary"))
         checkbox.pack(side="left")
         checkbox.configure(command=lambda li=lineIndex: self.toggleTodo(li))
         checkbox.bind("<Button-3>", lambda event, li=lineIndex: self.cancelTodo(event, li))

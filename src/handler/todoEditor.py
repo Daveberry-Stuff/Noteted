@@ -42,5 +42,5 @@ def refreshAll(textEditor, tdRenderFrame, filePath, Noteted):
             refreshContent = ctk.CTkButton(textEditorButtons, text="R", command=lambda: refreshAll(rawTextEditor, tdRenderFrame, filePath, Noteted), width=buttonSize, height=buttonSize, text_color=themeHandler.getThemePart("text"))
     else:
         refreshContent = ctk.CTkButton(textEditorButtons, text="R", command=lambda: refreshAll(rawTextEditor, tdRenderFrame, filePath, Noteted), width=buttonSize, height=buttonSize, text_color=themeHandler.getThemePart("text"))
-    
+    refreshContent.configure(fg_color=themeHandler.getThemePart("secondary"), hover_color=themeHandler.getThemePart("hover"))
     refreshContent.pack(expand=True, fill="y", pady=10, padx=10)
