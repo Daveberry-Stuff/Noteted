@@ -192,7 +192,7 @@ def listFiles(part, writingBox, previewContainer, TDrenderFrame, updatePreview, 
     for fileName in os.listdir(notesDirectory):
         if fileName.endswith((".md", ".td", ".txt")):
             filePath = os.path.join(notesDirectory, fileName) # type: ignore
-            button = ctk.CTkButton(part, text=fileName, fg_color="transparent", hover_color=themeHandler.getThemePart("frameHover"), text_color=themeHandler.getThemePart("text"))
+            button = ctk.CTkButton(part, text=fileName, fg_color="transparent", hover_color=themeHandler.getThemePart("frameHover"), text_color=themeHandler.getThemePart("frameText"))
             button.bind("<Button-3>", lambda event, path=filePath: popupMenu(event, path))
 
             def loadFileContent(path=filePath, btn=button):

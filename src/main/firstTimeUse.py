@@ -90,7 +90,7 @@ def setupWidgets(root, defaultSettings, setContinuePressed):
     rpcFrame = ctk.CTkFrame(container, fg_color="transparent")
     rpcFrame.pack(pady=(0, 70))
     
-    rpcCheckbox = ctk.CTkCheckBox(rpcFrame, text="Enable Discord RPC", onvalue=True, offvalue=False, fg_color=themeHandler.getThemePart("accent"), hover_color=themeHandler.getThemePart("hover"))
+    rpcCheckbox = ctk.CTkCheckBox(rpcFrame, text="Enable Discord RPC", onvalue=True, offvalue=False, fg_color=themeHandler.getThemePart("accent"), hover_color=themeHandler.getThemePart("hover"), checkmark_color=themeHandler.getThemePart("button"))
     rpcCheckbox.pack()
     
     # ------------ CONTINUE BUTTON ------------

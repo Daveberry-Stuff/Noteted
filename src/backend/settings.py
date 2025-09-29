@@ -15,9 +15,7 @@ import json
 
 def getAppConfigDirectory():
     if sys.platform == 'win32':
-        appdata = os.getenv('APPDATA')
-        if appdata:
-            return os.path.join(appdata, 'Noteted')
+        return os.path.join(os.getenv('APPDATA'), 'Noteted')
     elif sys.platform == 'linux': # Linux
         return os.path.join(os.getenv('XDG_CONFIG_HOME', os.path.join(os.path.expanduser('~'), '.config')), 'Noteted')
     elif sys.platform == 'darwin': # macOS
@@ -122,11 +120,11 @@ def listAllSettings(parent, currentSettings):
             settingOptionMenu.configure(command=lambda value, key=settingKey: updateSetting(key, value, currentSettings, parent))
         elif settingType == "bool":
             boolVar = tk.BooleanVar(value=currentValue)
-            settingCheckbox = ctk.CTkCheckBox(settingFrame, text="", variable=boolVar, onvalue=True, offvalue=False, fg_color=themeHandler.getThemePart("accent"), hover_color=themeHandler.getThemePart("hover"))
+            settingCheckbox = ctk.CTkCheckBox(settingFrame, text="", variable=boolVar, onvalue=True, offvalue=False, fg_color=themeHandler.getThemePart("accent"), hover_color=themeHandler.getThemePart("hover"), checkmark_color=themeHandler.getThemePart("button"))
             settingCheckbox.pack(side="right", padx=(5, 0))
             boolVar.trace("w", lambda *args, key=settingKey, var=boolVar: updateSetting(key, var.get(), currentSettings, parent))
         elif settingType == "path":
-            pathEntry = ctk.CTkEntry(settingFrame, width=200, fg_color=themeHandler.getThemePart("textBox"), text_color=themeHandler.getThemePart("text"))
+            pathEntry = ctk.CTkEntry(settingFrame, width=200, fg_color=themeHandler.getThemePart("textBox"), text_color=themeHandler.getThemePart("frameText"))
             pathEntry.insert(0, currentValue)
             pathEntry.pack(side="right", padx=(5, 0))
 
@@ -141,7 +139,7 @@ def listAllSettings(parent, currentSettings):
             browseButton.pack(side="right", padx=(5, 0))
             pathEntry.bind("<FocusOut>", lambda event, key=settingKey, entry=pathEntry: updateSetting(key, entry.get(), currentSettings, parent))
         elif settingType == "text":
-            settingEntry = ctk.CTkEntry(settingFrame, width=200, fg_color=themeHandler.getThemePart("textBox"), text_color=themeHandler.getThemePart("text"))
+            settingEntry = ctk.CTkEntry(settingFrame, width=200, fg_color=themeHandler.getThemePart("textBox"), text_color=themeHandler.getThemePart("frameText"))
             settingEntry.insert(0, currentValue)
             settingEntry.pack(side="right", padx=(5, 0))
             settingEntry.bind("<FocusOut>", lambda event, key=settingKey, entry=settingEntry: updateSetting(key, entry.get(), currentSettings, parent))
