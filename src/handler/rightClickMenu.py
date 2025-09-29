@@ -22,9 +22,9 @@ class RightClickMenu(ctk.CTkToplevel):
         
         if sys.platform == "win32":
             self.attributes("-transparentcolor", transparent_color)
-            self.frame = ctk.CTkFrame(self, fg_color=themeHandler.getThemePart("rightClick"))
-        else:
             self.frame = ctk.CTkFrame(self, corner_radius=5, fg_color=themeHandler.getThemePart("rightClick"))
+        else:
+            self.frame = ctk.CTkFrame(self, fg_color=themeHandler.getThemePart("rightClick"))
         self.frame.pack(expand=True, fill="both")
 
         self.addCommand(label="Delete", command=self.delete)

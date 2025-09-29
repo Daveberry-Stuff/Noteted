@@ -59,10 +59,10 @@ def delete(filePath, reload_callback):
     buttonFrame = ctk.CTkFrame(container, fg_color="transparent")
     buttonFrame.pack(pady=10, padx=10, fill="x")
 
-    yesButton = ctk.CTkButton(buttonFrame, text="Yes", command=proceedOperation, text_color=themeHandler.getThemePart("text"))
+    yesButton = ctk.CTkButton(buttonFrame, text="Yes", command=proceedOperation, text_color=themeHandler.getThemePart("text"), fg_color=themeHandler.getThemePart("accent"), hover_color=themeHandler.getThemePart("hover"))
     yesButton.pack(side="left", expand=True, fill="x", padx=(0, 5))
 
-    noButton = ctk.CTkButton(buttonFrame, text="No", command=cancelOperation, text_color=themeHandler.getThemePart("text"))
+    noButton = ctk.CTkButton(buttonFrame, text="No", command=cancelOperation, text_color=themeHandler.getThemePart("text"), fg_color=themeHandler.getThemePart("accent"), hover_color=themeHandler.getThemePart("hover"))
     noButton.pack(side="right", expand=True, fill="x", padx=(5, 0))
 
 def rename(filePath, reload_callback):
@@ -119,17 +119,25 @@ def rename(filePath, reload_callback):
     buttonFrame = ctk.CTkFrame(container, fg_color="transparent")
     buttonFrame.pack(pady=10, padx=10, fill="x")
 
-    renameButton = ctk.CTkButton(buttonFrame, text="Rename", command=intializeRename, text_color=themeHandler.getThemePart("text"))
+    renameButton = ctk.CTkButton(buttonFrame, text="Rename", command=intializeRename, text_color=themeHandler.getThemePart("text"), fg_color=themeHandler.getThemePart("accent"), hover_color=themeHandler.getThemePart("hover"))
     renameButton.pack(side="left", expand=True, fill="x", padx=(0, 5))
 
-    cancelButton = ctk.CTkButton(buttonFrame, text="Cancel", command=do_cancel, text_color=themeHandler.getThemePart("text"))
+    cancelButton = ctk.CTkButton(buttonFrame, text="Cancel", command=do_cancel, text_color=themeHandler.getThemePart("text"), fg_color=themeHandler.getThemePart("accent"), hover_color=themeHandler.getThemePart("hover"))
     cancelButton.pack(side="right", expand=True, fill="x", padx=(5, 0))
 
 def settings(root):
+    currentSettings = Nsettings.loadSettings()
+    settingsDefinitions = Nsettings.getSettingsDef(currentSettings)
+    
+    # --- Calculate window height based on number of settings ---
+    baseHeight = 120  # Base height for padding, title bar, and buttons
+    heightPerSetting = 40  # Approximate height for each setting row
+    newHeight = baseHeight + (len(settingsDefinitions) * heightPerSetting)
+
     settingsWindow = ctk.CTkToplevel()
     settingsWindow.title("Noteted - Settings")
-    settingsWindow.geometry("450x300")
-    settingsWindow.resizable(False, False)
+    settingsWindow.geometry(f"450x{newHeight}")
+    settingsWindow.resizable(False, True)
 
     settingsWindow.configure(fg_color=themeHandler.getThemePart("background"))
     ctk.set_appearance_mode(themeHandler.getThemePart("WPM"))
@@ -140,19 +148,25 @@ def settings(root):
 
     topLevelIcon(settingsWindow)
 
-    currentSettings = Nsettings.loadSettings()
-
     settingContainer = ctk.CTkFrame(settingsWindow, corner_radius=10, fg_color=themeHandler.getThemePart("frame"))
     settingContainer.pack(pady=10, padx=10, expand=True, fill="both")
 
     Nsettings.listAllSettings(settingContainer, currentSettings)
 
-    def onClosed():
+    buttonFrame = ctk.CTkFrame(settingsWindow, fg_color="transparent")
+    buttonFrame.pack(pady=10, padx=10, expand=True, fill="x")
+
+    def saveSettings():
         print("Settings window closed!")
         Nsettings.saveSettings(currentSettings)
-        NotetedMain.refreshUI(root)
+        messageBox("Info", "Settings saved! Please restart Noteted for some changes to take effect.")
+        settingsWindow.destroy()
 
-    settingsWindow.protocol("WM_DELETE_WINDOW", onClosed)
+    saveButton = ctk.CTkButton(buttonFrame, text="Save & Close", command=saveSettings, width=100, text_color=themeHandler.getThemePart("text"), fg_color=themeHandler.getThemePart("accent"), hover_color=themeHandler.getThemePart("hover"))
+    saveButton.pack(side="left", expand=True, fill="x", padx=(10, 5))
+
+    cancelButton = ctk.CTkButton(buttonFrame, text="Cancel", command=settingsWindow.destroy, width=100, text_color=themeHandler.getThemePart("text"), fg_color=themeHandler.getThemePart("accent"), hover_color=themeHandler.getThemePart("hover"))
+    cancelButton.pack(side="right", expand=True, fill="x", padx=(5, 10))
 
 def newFile(reloadCallback=None):
     newFileWindow = ctk.CTkToplevel()
@@ -209,13 +223,13 @@ def newFile(reloadCallback=None):
     buttonFrame = ctk.CTkFrame(container, fg_color="transparent")
     buttonFrame.pack(pady=10, padx=10, expand=True, fill="x")
     
-    mdButton = ctk.CTkButton(buttonFrame, text="Markdown", command=lambda: createFileWithExtension(".md"), width=100, text_color=themeHandler.getThemePart("text"))
+    mdButton = ctk.CTkButton(buttonFrame, text="Markdown", command=lambda: createFileWithExtension(".md"), width=100, text_color=themeHandler.getThemePart("text"), fg_color=themeHandler.getThemePart("accent"), hover_color=themeHandler.getThemePart("hover"))
     mdButton.pack(side="left", expand=True, fill="x", padx=10)
 
-    tdButton = ctk.CTkButton(buttonFrame, text="TODO", command=lambda: createFileWithExtension(".td"), width=100, text_color=themeHandler.getThemePart("text"))
+    tdButton = ctk.CTkButton(buttonFrame, text="TODO", command=lambda: createFileWithExtension(".td"), width=100, text_color=themeHandler.getThemePart("text"), fg_color=themeHandler.getThemePart("accent"), hover_color=themeHandler.getThemePart("hover"))
     tdButton.pack(side="left", expand=True, fill="x", padx=10)
 
-    txtButton = ctk.CTkButton(buttonFrame, text="Text", command=lambda: createFileWithExtension(".txt"), width=100, text_color=themeHandler.getThemePart("text"))
+    txtButton = ctk.CTkButton(buttonFrame, text="Text", command=lambda: createFileWithExtension(".txt"), width=100, text_color=themeHandler.getThemePart("text"), fg_color=themeHandler.getThemePart("accent"), hover_color=themeHandler.getThemePart("hover"))
     txtButton.pack(side="left", expand=True, fill="x", padx=10)
 
     newFileWindow.protocol("WM_DELETE_WINDOW", newFileWindow.destroy)
@@ -279,10 +293,10 @@ def info():
     buttonContainer = ctk.CTkFrame(container, fg_color="transparent")
     buttonContainer.pack(pady=10, padx=10, expand=True, fill="x")
 
-    githubButton = ctk.CTkButton(buttonContainer, text="Github", command=redirectGithub)
+    githubButton = ctk.CTkButton(buttonContainer, text="Github", command=redirectGithub, fg_color=themeHandler.getThemePart("accent"), hover_color=themeHandler.getThemePart("hover"))
     githubButton.pack(side="left", expand=True, fill="x", padx=(10, 5))
 
-    websiteButton = ctk.CTkButton(buttonContainer, text="Website", command=redirectWebsite)
+    websiteButton = ctk.CTkButton(buttonContainer, text="Website", command=redirectWebsite, fg_color=themeHandler.getThemePart("accent"), hover_color=themeHandler.getThemePart("hover"))
     websiteButton.pack(side="left", expand=True, fill="x", padx=(5, 10))
 
     infoWindow.protocol("WM_DELETE_WINDOW", infoWindow.destroy)

@@ -1,11 +1,10 @@
 import json
 import os
 import src.backend.getFromJSON as getFromJSON
+import src.handler.path as pathHandler
 
 def getThemePath():
-    # The project root is two levels up from this file's directory
-    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
-    return os.path.join(project_root, 'assets', 'theme')
+    return os.path.join(pathHandler.assetsPath(), 'theme')
 
 def loadTheme(themeName=None):
     if themeName is None:
@@ -39,6 +38,8 @@ def getThemePart(part):
         themeGot = theme.get("accentColor", {})
     elif part == "secondary":
         themeGot = theme.get("secondaryColor", {})
+    elif part == "hover":
+        themeGot = theme.get("hoverColor", {})
     elif part == "background":
         themeGot = theme.get("backgroundColor", {})
 
@@ -48,8 +49,8 @@ def getThemePart(part):
         themeGot = theme.get("textBoxColor", {})
     elif part == "selected":
         themeGot = theme.get("selectedColor", {})
-    elif part == "hover":
-        themeGot = theme.get("hoverColor", {})
+    elif part == "frameHover":
+        themeGot = theme.get("frameHoverColor", {})
     elif part == "rightClick":
         themeGot = theme.get("rightClickMenuColor", {})
 

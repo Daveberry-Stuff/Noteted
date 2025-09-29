@@ -88,10 +88,10 @@ def initializeWindowUpdate():
     messageLabel = ctk.CTkLabel(notificationContainer, text="This is a reccomended thing to do, so please update Noteted regularly!", text_color=themeHandler.getThemePart("text"), font=("Arial", 14))
     messageLabel.pack(pady=0, padx=10, fill="both")
 
-    updateButtonLabel = ctk.CTkButton(notificationContainer, text="Latest Release", command=latestRelese, text_color=themeHandler.getThemePart("text"))
+    updateButtonLabel = ctk.CTkButton(notificationContainer, text="Latest Release", command=latestRelese, text_color=themeHandler.getThemePart("text"), fg_color=themeHandler.getThemePart("accent"), hover_color=themeHandler.getThemePart("hover"))
     updateButtonLabel.pack(side="left", pady=(2, 10), padx=(10, 5), fill="x", expand=True)
 
-    continueButtonLabel = ctk.CTkButton(notificationContainer, text="Continue Anyways", command=continueAnyways, text_color=themeHandler.getThemePart("text"))
+    continueButtonLabel = ctk.CTkButton(notificationContainer, text="Continue Anyways", command=continueAnyways, text_color=themeHandler.getThemePart("text"), fg_color=themeHandler.getThemePart("accent"), hover_color=themeHandler.getThemePart("hover"))
     continueButtonLabel.pack(side="right", pady=(2, 10), padx=(5, 10), fill="x", expand=True)
 
     notificationUpdate.protocol("WM_DELETE_WINDOW", notificationUpdate.destroy)

@@ -153,9 +153,9 @@ def buttons(frame, reloadList, root):
         _iconPath = pathHandler.iconsPath("buttons", buttonIcon + ".png")
         if os.path.exists(_iconPath): # type: ignore
             _buttonIcon = ctk.CTkImage(recolorImage(_iconPath, color=themeHandler.getThemePart("button")), size=iconSize) # type: ignore
-            _button = ctk.CTkButton(buttonFrame, image=_buttonIcon, text="", command=buttonCommand, width=buttonSize, height=buttonSize)
+            _button = ctk.CTkButton(buttonFrame, image=_buttonIcon, text="", command=buttonCommand, width=buttonSize, height=buttonSize, fg_color=themeHandler.getThemePart("accent"), hover_color=themeHandler.getThemePart("hover"))
         else:
-            _button = ctk.CTkButton(buttonFrame, text=buttonText, command=buttonCommand, width=85, text_color=themeHandler.getThemePart("text"))
+            _button = ctk.CTkButton(buttonFrame, text=buttonText, command=buttonCommand, width=85, text_color=themeHandler.getThemePart("text"), fg_color=themeHandler.getThemePart("accent"), hover_color=themeHandler.getThemePart("hover"))
         _button.pack(side="left", expand=False, padx=(20, 0))
         
     
@@ -192,7 +192,7 @@ def listFiles(part, writingBox, previewContainer, TDrenderFrame, updatePreview, 
     for fileName in os.listdir(notesDirectory):
         if fileName.endswith((".md", ".td", ".txt")):
             filePath = os.path.join(notesDirectory, fileName) # type: ignore
-            button = ctk.CTkButton(part, text=fileName, fg_color="transparent", hover_color=themeHandler.getThemePart("hover"), text_color=themeHandler.getThemePart("text"))
+            button = ctk.CTkButton(part, text=fileName, fg_color="transparent", hover_color=themeHandler.getThemePart("frameHover"), text_color=themeHandler.getThemePart("text"))
             button.bind("<Button-3>", lambda event, path=filePath: popupMenu(event, path))
 
             def loadFileContent(path=filePath, btn=button):

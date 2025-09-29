@@ -6,6 +6,7 @@ import tkinter.filedialog as filedialog
 import src.backend.settings as settings
 import src.main.Noteted as Noteted
 import src.handler.path as pathHandler
+import src.handler.theme as themeHandler
 
 def initializeFirstTimeUI():
     root = ctk.CTk()
@@ -82,14 +83,14 @@ def setupWidgets(root, defaultSettings, setContinuePressed):
             pathEntry.delete(0, tk.END)
             pathEntry.insert(0, directory)
 
-    browseButton = ctk.CTkButton(pathFrame, text="Browse", width=80, command=browsePath)
+    browseButton = ctk.CTkButton(pathFrame, text="Browse", width=80, command=browsePath, fg_color=themeHandler.getThemePart("accent"), hover_color=themeHandler.getThemePart("hover"))
     browseButton.pack(side="right")
     
     # ------------ ENABLE DISCORD RPC ------------
     rpcFrame = ctk.CTkFrame(container, fg_color="transparent")
     rpcFrame.pack(pady=(0, 70))
     
-    rpcCheckbox = ctk.CTkCheckBox(rpcFrame, text="Enable Discord RPC", onvalue=True, offvalue=False)
+    rpcCheckbox = ctk.CTkCheckBox(rpcFrame, text="Enable Discord RPC", onvalue=True, offvalue=False, fg_color=themeHandler.getThemePart("accent"), hover_color=themeHandler.getThemePart("hover"))
     rpcCheckbox.pack()
     
     # ------------ CONTINUE BUTTON ------------
@@ -108,7 +109,7 @@ def setupWidgets(root, defaultSettings, setContinuePressed):
         root.destroy()
         Noteted.initializeUI()
 
-    continueButton = ctk.CTkButton(container, text="Continue", command=proceed)
+    continueButton = ctk.CTkButton(container, text="Continue", command=proceed, fg_color=themeHandler.getThemePart("accent"), hover_color=themeHandler.getThemePart("hover"))
     continueButton.pack(side="bottom")
 
 if __name__ == "__main__":
