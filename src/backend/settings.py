@@ -3,6 +3,7 @@ import tkinter as tk
 import tkinter.filedialog as filedialog
 import tkinter.messagebox as messagebox
 import src.handler.path as pathHandler
+import src.handler.theme as themeHandler
 import os
 import sys
 import json
@@ -41,8 +42,6 @@ def saveSettings(settingsData):
     print(f"Attempting to save settings to: {settingsFile}")
     with open(settingsFile, 'w') as f:
         json.dump(settingsData, f, indent=4)
-
-import src.handler.theme as themeHandler
 
 def getSettingsDef(currentSettings):
     settingsDefinitions = [

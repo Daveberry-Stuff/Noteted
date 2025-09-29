@@ -129,9 +129,9 @@ def settings(root):
     currentSettings = Nsettings.loadSettings()
     settingsDefinitions = Nsettings.getSettingsDef(currentSettings)
     
-    # --- Calculate window height based on number of settings ---
-    baseHeight = 120  # Base height for padding, title bar, and buttons
-    heightPerSetting = 40  # Approximate height for each setting row
+    # --- calculate window height based on number of settings ---
+    baseHeight = 120  # base height for padding, title bar, and buttons
+    heightPerSetting = 40  # approximate height for each setting row
     newHeight = baseHeight + (len(settingsDefinitions) * heightPerSetting)
 
     settingsWindow = ctk.CTkToplevel()
@@ -159,7 +159,7 @@ def settings(root):
     def saveSettings():
         print("Settings window closed!")
         Nsettings.saveSettings(currentSettings)
-        messageBox("Info", "Settings saved! Please restart Noteted for some changes to take effect.")
+        NotetedMain.refreshUI(root)
         settingsWindow.destroy()
 
     saveButton = ctk.CTkButton(buttonFrame, text="Save & Close", command=saveSettings, width=100, text_color=themeHandler.getThemePart("text"), fg_color=themeHandler.getThemePart("accent"), hover_color=themeHandler.getThemePart("hover"))
