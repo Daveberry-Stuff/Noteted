@@ -1,12 +1,13 @@
 {
     "accentColor": "#008BFF",
     "secondaryColor": "#008BFF",
+    "hoverColor": "#006EC9",
     "backgroundColor": "#000000",
 
     "frameColor": "#0A0A0A",
     "textBoxColor": "#1F1F1F",
     "selectedColor": "#202020",
-    "hoverColor": "#333333",
+    "frameHoverColor": "#333333",
     "rightClickMenuColor": "#131313",
 
     "textColor": "#FFFFFF",
