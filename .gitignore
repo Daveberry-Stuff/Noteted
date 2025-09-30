@@ -10,6 +10,7 @@ libFix/__pycache__
 
 # other stupid stuff
 venv
+.venv
 .DS_Store
 dist
 build

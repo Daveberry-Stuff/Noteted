@@ -2,36 +2,31 @@ import os
 import sys
 from PIL import Image
 
-# fuck you fuck you fuck y-
-# thank you pillow and tkhtmlvi-
 def patchTKhtmlView():
     major = sys.version_info.major
     minor = sys.version_info.minor
-    micro = sys.version_info.micro
+    venvFolderName = input("Input your virtual environment folder name: ")
+    
     try:
         if sys.platform == "win32":
-            parentPath = os.path.abspath(os.path.join(__file__, '..', '..'))
-            parserPath = os.path.join(os.path.join(parentPath), "venv", "Lib", "site-packages", "tkhtmlview",  "html_parser.py")
-        elif sys.platform == "linux" and sys.platform == "darwin":
-            parentPath = os.path.abspath(os.path.join(__file__, '..', '..'))
-            parserPath = os.path.join(os.path.join(parentPath), "venv", "lib", f"python{major}.{minor}", "site-packages", "tkhtmlview",  "html_parser.py")
+            parserPath = os.path.join(os.getcwd(), venvFolderName, "Lib", "site-packages", "tkhtmlview",  "html_parser.py")
+        else:
+            parserPath = os.path.join(os.getcwd(), venvFolderName, "lib", f"python{major}.{minor}", "site-packages", "tkhtmlview",  "html_parser.py")
 
         with open(str(parserPath), "r", encoding="utf-8") as f:
             content = f.read()
 
-        if hasattr(Image, 'Resampling') and "Image.ANTIALIAS" in content:
-            newContent = content.replace("Image.ANTIALIAS", "Image.Resampling.LANCZOS")
+        if "if width > 0 and height > 0:" not in content:
+            libCodeFix = """if width > 0 and height > 0:
+                        image = image.resize((width, height), Image.Resampling.LANCZOS) """
+            newContent = content.replace("image = image.resize((width, height), Image.ANTIALIAS)", libCodeFix)
             with open(str(parserPath), "w", encoding="utf-8") as f:
                 f.write(newContent)
-            print("successfully patched tkhtmlview for pillow 10+.")
-        elif "Image.ANTIALIAS" not in content:
-            print("tkhtmlview appears to be already patched or doesn't need patching.")
+            print("Patched tkhtmlview!")
         else:
-            print("pillow version is less than 10.0.0, no patch needed.")
-
+            print("Seems like tkhtmlview is already patched, no need to patch it again!")
 
     except Exception as e:
         print(f"Error patching tkhtmlview: {e}", file=sys.stderr)
 
-if __name__ == "__main__":
-    patchTKhtmlView()
+patchTKhtmlView()
